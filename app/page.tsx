@@ -1,5 +1,17 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
 export default function Home() {
   return (
-    <p className="text-amber-300">teste</p>
+    <div className="bg-dark h-screen p-4">
+      <Avatar>
+        <AvatarImage src="https://github.com/shadcn.png" alt="avatar" />
+    
+          <AvatarFallback>
+            CN
+          </AvatarFallback>
+      </Avatar>
+     
+    </div>
   );
 }
+
