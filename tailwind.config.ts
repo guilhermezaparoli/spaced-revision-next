@@ -11,7 +11,9 @@ export default {
   	extend: {
   		colors: {
 			accordion: "#1E293B",
-			rowAccordion: "#253143",
+			rowAccordionOdd: "#253143",
+			rowAccordionEven: "#1E293B",
+			details: '#64748B',
 			white: "#E5E7EB",
 			darkbg: "#0F172A",
   			background: 'hsl(var(--background))',
