@@ -6,8 +6,17 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Table,
   TableBody,
@@ -99,9 +108,35 @@ export default function Home() {
 
         <div className="flex flex-col gap-2">
           <Dialog>
-            <Button className="bg-cyan-500 w-24 mb-4 hover:bg-cyan-600 transition-colors">
-              Adicionar
-            </Button>
+            <DialogTrigger asChild>
+              <Button className="bg-cyan-500 w-24 mb-4 hover:bg-cyan-600 transition-colors">
+                Adicionar
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Criar Matéria</DialogTitle>
+                <DialogDescription>
+                  Crie uma nova matéria e adicione suas revisões
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="">
+                  {/* <Label htmlFor="name" className="text-right text-white">
+                    Nome
+                  </Label> */}
+                  <Input
+                    id="name"
+                    className="col-span-3 text-white"
+                    placeholder='Nome da matéria'
+                  />
+                </div>
+                
+              </div>
+              <DialogFooter>
+                <Button type="submit" className="bg-cyan-500 hover:bg-cyan-600 w-full">Confirmar criação</Button>
+              </DialogFooter>
+            </DialogContent>
           </Dialog>
 
           <Accordion type="single" collapsible className="w-full ">
