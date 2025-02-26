@@ -2,10 +2,10 @@ import {
   Accordion,
   AccordionContent,
   AccordionItem,
-} from '@/components/ui/accordion';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+} from "@/components/ui/accordion";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -14,9 +14,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -26,67 +26,67 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { AccordionTrigger } from '@radix-ui/react-accordion';
-import { Search } from 'lucide-react';
+} from "@/components/ui/table";
+import { AccordionTrigger } from "@radix-ui/react-accordion";
+import { Plus, Search } from "lucide-react";
 
 export default function Home() {
   const invoices = [
     {
-      invoice: 'INV001',
-      paymentStatus: 'dasdasdsadasd asd as das dasd ad ',
-      paymentStatus1: 'Paid',
-      paymentStatus2: 'Paid',
-      totalAmount: '$250.00',
-      paymentMethod: 'Credit Card',
+      invoice: "INV001",
+      paymentStatus: "dasdasdsadasd asd as das dasd ad ",
+      paymentStatus1: "Paid",
+      paymentStatus2: "Paid",
+      totalAmount: "$250.00",
+      paymentMethod: "Credit Card",
     },
     {
-      invoice: 'INV002',
-      paymentStatus: 'Paid',
-      paymentStatus1: 'Paid',
-      paymentStatus2: 'Paid',
-      totalAmount: '$250.00',
-      paymentMethod: 'Credit Card',
+      invoice: "INV002",
+      paymentStatus: "Paid",
+      paymentStatus1: "Paid",
+      paymentStatus2: "Paid",
+      totalAmount: "$250.00",
+      paymentMethod: "Credit Card",
     },
     {
-      invoice: 'INV003',
-      paymentStatus: 'Paid',
-      paymentStatus1: 'Paid',
-      paymentStatus2: 'Paid',
-      totalAmount: '$250.00',
-      paymentMethod: 'Credit Card',
+      invoice: "INV003",
+      paymentStatus: "Paid",
+      paymentStatus1: "Paid",
+      paymentStatus2: "Paid",
+      totalAmount: "$250.00",
+      paymentMethod: "Credit Card",
     },
     {
-      invoice: 'INV0014',
-      paymentStatus: 'Paid',
-      paymentStatus1: 'Paid',
-      paymentStatus2: 'Paid',
-      totalAmount: '$250.00',
-      paymentMethod: 'Credit Card',
+      invoice: "INV0014",
+      paymentStatus: "Paid",
+      paymentStatus1: "Paid",
+      paymentStatus2: "Paid",
+      totalAmount: "$250.00",
+      paymentMethod: "Credit Card",
     },
     {
-      invoice: 'INV0015',
-      paymentStatus: 'Paid',
-      paymentStatus1: 'Paid',
-      paymentStatus2: 'Paid',
-      totalAmount: '$250.00',
-      paymentMethod: 'Credit Card',
+      invoice: "INV0015",
+      paymentStatus: "Paid",
+      paymentStatus1: "Paid",
+      paymentStatus2: "Paid",
+      totalAmount: "$250.00",
+      paymentMethod: "Credit Card",
     },
     {
-      invoice: 'INV0016',
-      paymentStatus: 'Paid',
-      paymentStatus1: 'Paid',
-      paymentStatus2: 'Paid',
-      totalAmount: '$250.00',
-      paymentMethod: 'Credit Card',
+      invoice: "INV0016",
+      paymentStatus: "Paid",
+      paymentStatus1: "Paid",
+      paymentStatus2: "Paid",
+      totalAmount: "$250.00",
+      paymentMethod: "Credit Card",
     },
   ];
   return (
-    <div className="p-3 bg-darkbg h-screen">
-      <header className="flex justify-between items-center">
+    <div className="h-screen bg-darkbg p-3">
+      <header className="flex items-center justify-between">
         <p>teste</p>
         <div className="flex flex-col items-center">
-          <h1 className="text-white text-lg font-bold">SPACED REVISION</h1>
+          <h1 className="text-lg font-bold text-white">SPACED REVISION</h1>
           <p className="text-details">2025, Feb 09</p>
         </div>
         <Avatar>
@@ -94,23 +94,24 @@ export default function Home() {
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </header>
-      <main className="flex flex-col gap-12 mt-4">
+      <main className="mt-4 flex flex-col gap-12">
         <div className="relative w-full">
           <label className="relative flex items-center">
             <Input
               placeholder="Buscar tarefas"
               aria-label="Buscar tarefas"
-              className="h-10 w-full rounded-lg border-details text-white pl-3"
+              className="h-10 w-full rounded-lg border-details pl-3 text-white"
             />
-            <Search className="text-details size-6 absolute right-3" />
+            <Search className="absolute right-3 size-6 text-details" />
           </label>
         </div>
 
         <div className="flex flex-col gap-2">
           <Dialog>
             <DialogTrigger asChild>
-              <Button className="bg-cyan-500 w-24 mb-4 hover:bg-cyan-600 transition-colors">
-                Adicionar
+              <Button className="bg-primaryButton hover:bg-primaryButton/80 mb-4 flex w-24 items-center gap-2 text-white transition-colors">
+                <Plus className="size-6" />
+                <span>Adicionar</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
@@ -128,23 +129,27 @@ export default function Home() {
                   <Input
                     id="name"
                     className="col-span-3 text-white"
-                    placeholder='Nome da matéria'
+                    placeholder="Nome da matéria"
                   />
                 </div>
-                
               </div>
               <DialogFooter>
-                <Button type="submit" className="bg-cyan-500 hover:bg-cyan-600 w-full">Confirmar criação</Button>
+                <Button
+                  type="submit"
+                  className="w-full bg-cyan-500 hover:bg-cyan-600"
+                >
+                  Confirmar criação
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
 
-          <Accordion type="single" collapsible className="w-full ">
+          <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1" className="border-b-0">
-              <AccordionTrigger className="bg-accordion w-full text-start p-2 rounded-lg text-white h-11 ">
+              <AccordionTrigger className="h-11 w-full rounded-lg bg-accordion p-2 text-start text-white">
                 Matemática
               </AccordionTrigger>
-              <AccordionContent className="bg-rowAccordionOdd p-2 text-white ">
+              <AccordionContent className="bg-rowAccordionOdd text-white">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -157,12 +162,19 @@ export default function Home() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {invoices.map((invoice) => (
-                      <TableRow key={invoice.invoice}>
+                    {invoices.map((invoice, index) => (
+                      <TableRow
+                        key={invoice.invoice}
+                        className={
+                          index % 2 === 0
+                            ? "bg-rowAccordionEven"
+                            : "bg-rowAccordionOdd"
+                        }
+                      >
                         <TableCell className="font-medium">
                           {invoice.invoice}
                         </TableCell>
-                        <TableCell className="w-36 ">
+                        <TableCell className="w-36">
                           {invoice.paymentStatus}
                         </TableCell>
                         <TableCell>
@@ -203,13 +215,13 @@ export default function Home() {
           </Accordion>
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1" className="border-b-0">
-              <AccordionTrigger className="bg-accordion w-full text-start p-2 rounded-lg text-white">
+              <AccordionTrigger className="w-full rounded-lg bg-accordion p-2 text-start text-white">
                 Português
               </AccordionTrigger>
-              <AccordionContent className="bg-rowAccordionOdd p-2 text-white ">
+              <AccordionContent className="bg-rowAccordionOdd p-2 text-white">
                 Yes. It adheres to the WAI-ARIA design pattern.
               </AccordionContent>
-              <AccordionContent className="bg-rowAccordionEven p-2 text-white ">
+              <AccordionContent className="bg-rowAccordionEven p-2 text-white">
                 Yes. It adheres to the WAI-ARIA design pattern.
               </AccordionContent>
             </AccordionItem>
