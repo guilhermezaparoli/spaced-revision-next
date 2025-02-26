@@ -5,6 +5,8 @@ import {
 } from '@/components/ui/accordion';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Dialog } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import {
   Table,
@@ -96,9 +98,11 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Button className="bg-cyan-500 w-24 mb-4 hover:bg-cyan-600 transition-colors">
-            Adicionar
-          </Button>
+          <Dialog>
+            <Button className="bg-cyan-500 w-24 mb-4 hover:bg-cyan-600 transition-colors">
+              Adicionar
+            </Button>
+          </Dialog>
 
           <Accordion type="single" collapsible className="w-full ">
             <AccordionItem value="item-1" className="border-b-0">
@@ -108,30 +112,46 @@ export default function Home() {
               <AccordionContent className="bg-rowAccordionOdd p-2 text-white ">
                 <Table>
                   <TableHeader>
-                    <TableRow className="whitespace-nowrap">
-                      <TableHead className="w-[100px]">Nome</TableHead>
-                      <TableHead className="w-[100px]">Descrição</TableHead>
-                      <TableHead>Revisão 1</TableHead>
-                      <TableHead>Revisão 2</TableHead>
-                      <TableHead>Revisão 3</TableHead>
+                    <TableRow>
+                      <TableHead>Nome</TableHead>
+                      <TableHead className="min-w-[170px]">Descrição</TableHead>
+                      <TableHead className="min-w-[130px]">Revisão 1</TableHead>
+                      <TableHead className="min-w-[130px]">Revisão 2</TableHead>
+                      <TableHead className="min-w-[130px]">Revisão 3</TableHead>
                       <TableHead>Finalizada</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {invoices.map((invoice) => (
-                      <TableRow
-                        key={invoice.invoice}
-                        className="whitespace-nowrap"
-                      >
+                      <TableRow key={invoice.invoice}>
                         <TableCell className="font-medium">
                           {invoice.invoice}
                         </TableCell>
-                        <TableCell>{invoice.paymentStatus}</TableCell>
-                        <TableCell>{invoice.paymentStatus1}</TableCell>
-                        <TableCell>{invoice.paymentStatus2}</TableCell>
-                        <TableCell>{invoice.paymentMethod}</TableCell>
-                        <TableCell className="text-right">
-                          {invoice.totalAmount}
+                        <TableCell className="w-36 ">
+                          {invoice.paymentStatus}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-2">
+                            <p>16/01/2025</p>
+                            <Checkbox className="border-details" />
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-2">
+                            <p>16/01/2025</p>
+                            <Checkbox className="border-details" />
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-2">
+                            <p>16/01/2025</p>
+                            <Checkbox className="border-details" />
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex justify-center gap-2">
+                            <Checkbox className="border-details" />
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
