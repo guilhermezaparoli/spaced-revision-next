@@ -15,8 +15,14 @@ import Link from "next/link";
 export default function Login() {
   return (
     <div className="md:grid md:grid-cols-2">
-      <div className="bg-bluebg p-10 hidden md:flex">
-        <h1 className="text-2xl font-bold text-white italic">SPACED REVISION</h1>
+      <div className="bg-hero hidden p-10 md:flex md:flex-col md:justify-between">
+        <h1 className="text-2xl font-bold italic text-white">
+          SPACED REVISION
+        </h1>
+        <div className="text-white italic font-light">
+          <h1 className="text-6xl">Bem vindo!</h1>
+          <h1 className="text-6xl">Comece agora sua jornada com nosso sitema de revisões</h1>
+        </div>
       </div>
 
       <div className="relative flex h-screen flex-col items-center justify-center md:px-2">
