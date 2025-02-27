@@ -19,6 +19,7 @@ export default {
 			white: "#E5E7EB",
 			borderGray: "rgba(186, 186, 186, 0.50)",
 			darkbg: "rgba(19, 19, 22, 1)",
+			bluebg: "#050A24",
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

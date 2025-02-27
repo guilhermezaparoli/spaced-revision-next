@@ -86,7 +86,7 @@ export default function Home() {
       <header className="flex items-center justify-between">
         <p>teste</p>
         <div className="flex flex-col items-center">
-          <h1 className="text-lg font-bold text-white">SPACED REVISION</h1>
+          <h1 className="text-lg font-bold text-slate-50">SPACED REVISION</h1>
           <p className="text-details">2025, Feb 09</p>
         </div>
         <Avatar>
