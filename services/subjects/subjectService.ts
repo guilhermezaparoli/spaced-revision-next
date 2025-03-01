@@ -4,7 +4,8 @@ import api from "../api/api";
 export const SubjectService = {
     getSubjects: async () => {
         try {
-            const response = await api.get('http://localhost:3000/api/subjects');
+            const response = await api.get('http://localhost:3000/subject');
+            console.log(response)
             return {
                 status: 200,
                 message: 'Success',
