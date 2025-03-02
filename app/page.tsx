@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { SubjectService } from "@/api/services/subject/subjectService";
 import { SubjectAccordion } from "@/components/SubjectAccordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -21,18 +21,43 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { CircleUserIcon, LogOutIcon, Plus, Search } from "lucide-react";
-
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import zod from "zod";
 export default function Home() {
-
-  const {data, isLoading, status} = useQuery({
+  const { data, isLoading, status } = useQuery({
     queryKey: ["subjects"],
-    queryFn: SubjectService.getSubjects,
-  })
+    queryFn: SubjectService.getAll,
+  });
+  const [openModal, setOpenModal] = useState(false);
 
-  console.log(data)
+  const zodSchema = zod.object({
+    name: zod.string().min(3, "Nome muito curto").max(50, "Nome muito longo"),
+    intervalo: zod.array(zod.number()),
+  });
 
+  const {register, handleSubmit, formState: {errors}, getValues} = useForm({
+    resolver: zodResolver(zodSchema),
+    defaultValues: {
+      name: "",
+      intervalo: [1, 7, 14, 30, 60],
+    },
+  });
+  
+
+  async function onHandleSubmit(data) {
+    const response = await SubjectService.create(data)
+
+    console.log(response)
+    setOpenModal(false)
+  }
+
+
+  console.log(errors, "12312")
   return (
     <div className="h-screen bg-darkbg p-3">
       <header className="flex items-center justify-between">
@@ -77,7 +102,7 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Dialog>
+          <Dialog open={openModal} onOpenChange={setOpenModal}>
             <DialogTrigger asChild>
               <Button className="mb-4 flex w-24 items-center gap-2 bg-primaryButton text-white transition-colors hover:bg-primaryButton/80">
                 <Plus className="size-6" />
@@ -93,13 +118,25 @@ export default function Home() {
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="">
-                  {/* <Label htmlFor="name" className="text-right text-white">
+                  <Label htmlFor="name" className="text-right text-white">
                     Nome
-                  </Label> */}
+                  </Label>
                   <Input
                     id="name"
                     className="col-span-3 text-white"
-                    placeholder="Nome da matéria"
+                    placeholder="Digite o nome da matéria"
+                    {...register("name")}
+                  />
+                </div>
+                <div className="">
+                  <Label htmlFor="intervalo" className="text-right text-white">
+                    Intervalos de revisões
+                  </Label>
+                  <Input
+                    id="intervalo"
+                    className="col-span-3 text-white"
+                    placeholder="Digite o intervalo"
+                    {...register("intervalo")}
                   />
                 </div>
               </div>
@@ -107,6 +144,7 @@ export default function Home() {
                 <Button
                   type="submit"
                   className="w-full bg-cyan-500 hover:bg-cyan-600"
+                  onClick={handleSubmit(onHandleSubmit)}
                 >
                   Confirmar criação
                 </Button>
@@ -114,10 +152,10 @@ export default function Home() {
             </DialogContent>
           </Dialog>
 
-          {status == "success" && data.map((subject) => (
-            <SubjectAccordion key={subject.id} subject={subject} />
-          ))}
-
+          {status == "success" &&
+            data.map((subject) => (
+              <SubjectAccordion key={subject.id} subject={subject} />
+            ))}
         </div>
       </main>
       <footer></footer>
