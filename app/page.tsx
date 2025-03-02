@@ -1,5 +1,5 @@
 'use client'
-import { SubjectService } from "@/api/services/subjects/subjectService";
+import { SubjectService } from "@/api/services/subject/subjectService";
 import { SubjectAccordion } from "@/components/SubjectAccordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -25,56 +25,6 @@ import { useQuery } from "@tanstack/react-query";
 import { CircleUserIcon, LogOutIcon, Plus, Search } from "lucide-react";
 
 export default function Home() {
-  const invoices = [
-    {
-      invoice: "INV001",
-      paymentStatus: "dasdasdsadasd asd as das dasd ad ",
-      paymentStatus1: "Paid",
-      paymentStatus2: "Paid",
-      totalAmount: "$250.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV002",
-      paymentStatus: "Paid",
-      paymentStatus1: "Paid",
-      paymentStatus2: "Paid",
-      totalAmount: "$250.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV003",
-      paymentStatus: "Paid",
-      paymentStatus1: "Paid",
-      paymentStatus2: "Paid",
-      totalAmount: "$250.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV0014",
-      paymentStatus: "Paid",
-      paymentStatus1: "Paid",
-      paymentStatus2: "Paid",
-      totalAmount: "$250.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV0015",
-      paymentStatus: "Paid",
-      paymentStatus1: "Paid",
-      paymentStatus2: "Paid",
-      totalAmount: "$250.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV0016",
-      paymentStatus: "Paid",
-      paymentStatus1: "Paid",
-      paymentStatus2: "Paid",
-      totalAmount: "$250.00",
-      paymentMethod: "Credit Card",
-    },
-  ];
 
   const {data, isLoading, status} = useQuery({
     queryKey: ["subjects"],
