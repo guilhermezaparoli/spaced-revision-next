@@ -1,12 +1,8 @@
+'use client'
+import { SubjectService } from "@/api/services/subjects/subjectService";
 import { SubjectAccordion } from "@/components/SubjectAccordion";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-} from "@/components/ui/accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -19,30 +15,13 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { AccordionTrigger } from "@radix-ui/react-accordion";
+import { useQuery } from "@tanstack/react-query";
 import { CircleUserIcon, LogOutIcon, Plus, Search } from "lucide-react";
 
 export default function Home() {
@@ -96,6 +75,13 @@ export default function Home() {
       paymentMethod: "Credit Card",
     },
   ];
+
+  const {data, isLoading, status} = useQuery({
+    queryKey: ["subjects"],
+    queryFn: SubjectService.getSubjects,
+  })
+
+  console.log(data)
 
   return (
     <div className="h-screen bg-darkbg p-3">
@@ -178,7 +164,10 @@ export default function Home() {
             </DialogContent>
           </Dialog>
 
-          <SubjectAccordion />
+          {status == "success" && data.map((subject) => (
+            <SubjectAccordion key={subject.id} subject={subject} />
+          ))}
+
         </div>
       </main>
       <footer></footer>

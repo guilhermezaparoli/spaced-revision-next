@@ -1,24 +1,26 @@
 import axios from "axios";
 import api from "../../api";
-import { LoginResponse } from "@/@types/auth";
 
 type LoginProps = {
-  email: string;
-  password_hash: string;
-};
+    email: string;
+    password_hash: string;
+}
 
 export const AuthService = {
-  login: async ({
-    email,
-    password_hash,
-  }: LoginProps): Promise<any> => {
+  login: async ({ email, password_hash }: LoginProps) => {
     try {
-      const response = await api.post("/auth/login", {
-        email,
-        password_hash,
-      });
+      const { data } = await api.post(
+        "/auth/login",
+        {
+          email,
+          password_hash,
+        }
+      );
 
-      return response;
+      return {
+        status: 200,
+        message: "Success",
+      };
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         throw new Error(
