@@ -1,4 +1,9 @@
 "use client";
+import { Subject } from "@/@types/subject";
+import {
+  useSubjectQuery,
+  useSubjectQueryMutationCreate,
+} from "@/api/queries/subject/subjectQuery";
 import { SubjectService } from "@/api/services/subject/subjectService";
 import { SubjectAccordion } from "@/components/SubjectAccordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -23,41 +28,48 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { CircleUserIcon, LogOutIcon, Plus, Search } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import zod from "zod";
 export default function Home() {
-  const { data, isLoading, status } = useQuery({
-    queryKey: ["subjects"],
-    queryFn: SubjectService.getAll,
-  });
+  const { data, isLoading, status } = useSubjectQuery();
   const [openModal, setOpenModal] = useState(false);
-
+  const mutationSubjectCreate = useSubjectQueryMutationCreate();
+  const queryClient = useQueryClient();
   const zodSchema = zod.object({
     name: zod.string().min(3, "Nome muito curto").max(50, "Nome muito longo"),
     intervalo: zod.array(zod.number()),
   });
 
-  const {register, handleSubmit, formState: {errors}, getValues} = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+  } = useForm({
     resolver: zodResolver(zodSchema),
     defaultValues: {
       name: "",
       intervalo: [1, 7, 14, 30, 60],
     },
   });
-  
 
-  async function onHandleSubmit(data) {
-    const response = await SubjectService.create(data)
+  async function onHandleSubmit(data: { name: string; intervalo: number[] }) {
+    mutationSubjectCreate.mutate(data, {
+      onSuccess: (data) => {
+        queryClient.setQueryData(["subjects"], (currentData: Subject[]) => [
+          ...currentData,
+          data,
+        ]);
+      },
+    });
 
-    console.log(response)
-    setOpenModal(false)
+    setOpenModal(false);
   }
 
-
-  console.log(errors, "12312")
+  console.log(errors, "12312");
   return (
     <div className="h-screen bg-darkbg p-3">
       <header className="flex items-center justify-between">
@@ -73,12 +85,10 @@ export default function Home() {
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
-            <DropdownMenuSeparator />
+          <DropdownMenuContent>
             <DropdownMenuItem>
-              <CircleUserIcon className="" />
-              <DropdownMenuItem>Meu perfil</DropdownMenuItem>
+              <CircleUserIcon />
+              <DropdownMenuItem>Ver perfil</DropdownMenuItem>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
 

@@ -19,88 +19,213 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { Task } from "@/@types/task";
 import { Review } from "@/@types/review";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import api from "@/api/api";
-import { TaskService } from "@/api/services/task/taskService";
+import { EllipsisVertical, Pen, Plus, Trash2 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import zod from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useReviewQueryMutation } from "@/api/queries/review/useReviewQueyMutation";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  useSubjectQueryMutationDelete,
+  useSubjectQueryMutationUpdate,
+} from "@/api/queries/subject/subjectQuery";
 
 export function SubjectAccordion({ subject }: { subject: Subject }) {
   dayjs.locale("pt-br");
-  const [optimisticTasks, setOptimisticTasks] = useState<Task[]>(subject.task);
+  const queryClient = useQueryClient();
+  const [openModalEdit, setOpenModalEdit] = useState(false);
+  const mutation = useReviewQueryMutation();
+  const mutationSubjectUpdate = useSubjectQueryMutationUpdate();
+  const mutationSubjectDelete = useSubjectQueryMutationDelete();
+  const zodSchema = zod.object({
+    name: zod.string().min(3, "Nome muito curto").max(50, "Nome muito longo"),
+    intervalo: zod.array(zod.number()),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+  } = useForm({
+    resolver: zodResolver(zodSchema),
+    defaultValues: {
+      name: subject.name,
+      intervalo: [1, 7, 14, 30, 60],
+    },
+  });
+
+  async function onHandleEditSubmit(data: Subject) {
+    mutationSubjectUpdate.mutate(
+      {
+        id: subject.id,
+        data,
+      },
+      {
+        onSuccess: (data) => {
+          queryClient.setQueryData(["subjects"], (currentData: Subject[]) =>
+            currentData.map((subject) => {
+              if (subject.id === data.id) {
+                return {
+                  ...subject,
+                  name: data.name,
+                };
+              }
+              return subject;
+            }),
+          );
+        },
+      },
+    );
+
+    setOpenModalEdit(false);
+  }
 
   async function onClickCheckboxReview(item: Review) {
-    const updatedTasks = optimisticTasks.map((task) => {
-      const updatedReviews = task.review.map((review) => {
-        if (review.id === item.id) {
-          return { ...review, completed: !review.completed };
-        }
-
-        if (review.task_id === item.task_id) {
-          if (item.review_date > review.review_date) {
-            return { ...review, completed: true };
-          }
-          if (item.review_date < review.review_date) {
-            return { ...review, completed: false };
-          }
-        }
-
-        return review;
-      });
-
-      return { ...task, review: updatedReviews };
-    });
-
-    setOptimisticTasks(updatedTasks);
-
-    try {
-      await api.put(`/review/${item.id}`, {
+    mutation.mutate(
+      {
+        id: item.id,
         completed: !item.completed,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+      },
+      {
+        onSuccess: (data) => {
+          queryClient.setQueryData(["subjects"], (currentData: Subject[]) =>
+            currentData.map((subject) => {
+              if (subject.id === data.subject_id) {
+                return {
+                  ...subject,
+                  task: subject.task.map((task) => {
+                    if (task.id === data.id) {
+                      return {
+                        ...task,
+                        review: data.review,
+                      };
+                    }
+                    return task;
+                  }),
+                };
+              }
+              return subject;
+            }),
+          );
+        },
+      },
+    );
   }
 
-  async function onClickCompleteAllTasks(item: Task) {
-    const updatedTasks = optimisticTasks.map((task) => {
-      const updatedReviews = task.review.map((review) => {
-        if (review.task_id === item.id) {
-          return { ...review, completed: !task.completed };
-        }
+  async function onClickCompleteAllTasks(item: Task) {}
 
-        return review;
-      });
-
-      if (item.id === task.id) {
-        return { ...task, completed: !task.completed, review: updatedReviews };
-      }
-
-      return { ...task, review: updatedReviews };
+  async function onHandleDeleteSubject(id: string) {
+    mutationSubjectDelete.mutate(id, {
+      onSuccess: () => {
+        queryClient.setQueryData(["subjects"], (currentData: Subject[]) =>
+          currentData.filter((subject) => subject.id !== id),
+        );
+      },
     });
-
-    setOptimisticTasks(updatedTasks);
-
-    try {
-      const response = await TaskService.update(item.id, {
-        completed: !item.completed,
-      });
-      console.log(response)
-    } catch (error) {
-      console.log(error);
-    }
   }
 
-  console.log(optimisticTasks);
+  console.log(subject.task);
   return (
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem value="item-1" className="border-b-0">
         <AccordionTrigger className="h-11 w-full rounded-lg bg-accordion p-2 text-start text-white">
-          {subject.name}
+          <div className="flex w-full items-center justify-between">
+            <p>{subject.name}</p>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <EllipsisVertical className="size-5 text-white" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onHandleDeleteSubject(subject.id);
+                  }}
+                >
+                  <Trash2 className="text-red-600" />
+                  <p>Deletar</p>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenModalEdit(true);
+                  }}
+                >
+                  <Pen className="text-blue-500" />
+                  <p>Editar</p>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          <Dialog open={openModalEdit} onOpenChange={setOpenModalEdit}>
+            <DialogContent
+              className="sm:max-w-[425px]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <DialogHeader>
+                <DialogTitle>Editar Matéria</DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="">
+                  <Label htmlFor="name" className="text-right text-white">
+                    Nome
+                  </Label>
+                  <Input
+                    id="name"
+                    className="col-span-3 text-white"
+                    placeholder="Digite o nome da matéria"
+                    {...register("name")}
+                  />
+                </div>
+                <div className="">
+                  <Label htmlFor="intervalo" className="text-right text-white">
+                    Intervalos de revisões (não pode ser alterado)
+                  </Label>
+                  <Input
+                    id="intervalo"
+                    className="col-span-3 text-white"
+                    placeholder="Digite o intervalo"
+                    disabled
+                    {...register("intervalo")}
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button
+                  type="submit"
+                  className="w-full bg-cyan-500 hover:bg-cyan-600"
+                  onClick={handleSubmit(onHandleEditSubmit)}
+                >
+                  Confirmar edição
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </AccordionTrigger>
         <AccordionContent className="bg-rowAccordionOdd text-white">
+            <Plus className="text-primaryButton" />
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nome</TableHead>
+                <TableHead className="min-w-[130px]" >Nome</TableHead>
                 <TableHead className="min-w-[170px]">Descrição</TableHead>
                 <TableHead className="min-w-[130px]">Revisão 1</TableHead>
                 <TableHead className="min-w-[130px]">Revisão 2</TableHead>
@@ -110,7 +235,7 @@ export function SubjectAccordion({ subject }: { subject: Subject }) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {optimisticTasks.map((task, index) => (
+              {subject.task.map((task, index) => (
                 <TableRow
                   key={task.id}
                   className={
@@ -122,7 +247,7 @@ export function SubjectAccordion({ subject }: { subject: Subject }) {
                   <TableCell className="font-medium">{task.name}</TableCell>
                   <TableCell className="w-36">{task.description}</TableCell>
                   {task.review.map((review) => (
-                    <TableCell key={review.id}>
+                    <TableCell key={review.id} >
                       <div className="flex items-center gap-2">
                         <p
                           className={`${
@@ -161,4 +286,4 @@ export function SubjectAccordion({ subject }: { subject: Subject }) {
       </AccordionItem>
     </Accordion>
   );
-} //   );
+}
