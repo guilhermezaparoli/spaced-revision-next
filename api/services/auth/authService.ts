@@ -29,4 +29,17 @@ export const AuthService = {
       }
     }
   },
+  logout: async () => {
+    console.log("entrou aqui bolsonaro");
+    try {
+      const response = await api.post("/auth/logout");
+      return response;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw new Error(
+          `Status: ${error.response.status}, Message: ${error.response.data.message}`,
+        );
+      }
+    }
+  }
 };

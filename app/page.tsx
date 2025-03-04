@@ -1,5 +1,6 @@
 "use client";
 import { Subject } from "@/@types/subject";
+import { useAuthQueryMutationLogout } from "@/api/queries/auth/authQuery";
 import {
   useSubjectQuery,
   useSubjectQueryMutationCreate,
@@ -29,7 +30,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
+import dayjs from "dayjs";
 import { CircleUserIcon, LogOutIcon, Plus, Search } from "lucide-react";
+import { useRouter } from "next/navigation";
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import zod from "zod";
@@ -37,7 +41,9 @@ export default function Home() {
   const { data, isLoading, status } = useSubjectQuery();
   const [openModal, setOpenModal] = useState(false);
   const mutationSubjectCreate = useSubjectQueryMutationCreate();
+  const mutationAuthLogout = useAuthQueryMutationLogout();
   const queryClient = useQueryClient();
+  const router = useRouter();
   const zodSchema = zod.object({
     name: zod.string().min(3, "Nome muito curto").max(50, "Nome muito longo"),
     intervals: zod.array(zod.number()),
@@ -68,9 +74,20 @@ export default function Home() {
     });
 
     setOpenModal(false);
-    reset()
+    reset();
   }
 
+  async function onHandleLogout() {
+    mutationAuthLogout.mutate(null, {
+      onSuccess: () => {
+        router.push("/login");
+      },
+      onError: (error) => {
+        console.error("Logout failed:", error);
+      }
+    });
+  }
+  
   console.log(errors, "12312");
   return (
     <div className="h-screen bg-darkbg p-3">
@@ -78,7 +95,7 @@ export default function Home() {
         <p>teste</p>
         <div className="flex flex-col items-center">
           <h1 className="text-lg font-bold text-slate-50">SPACED REVISION</h1>
-          <p className="text-details">2025, Feb 09</p>
+          <p className="text-details">{dayjs().format("DD MMM YYYY")}</p>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -94,7 +111,7 @@ export default function Home() {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={onHandleLogout}>
               <LogOutIcon className="text-red-600" />
               <p>Sair</p>
             </DropdownMenuItem>
