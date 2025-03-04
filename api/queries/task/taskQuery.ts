@@ -25,3 +25,9 @@ export const userTaskQueryUpdate = () => {
         mutationFn: ({id, name, description}: TaskProps) => TaskService.update({id, name, description}),
     })
 }
+
+export const useTaskQueryDelete = () => {
+    return useMutation({
+        mutationFn: (id: string) => TaskService.delete(id),
+    })
+}

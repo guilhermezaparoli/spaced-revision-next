@@ -11,6 +11,7 @@ export const SubjectService = {
     console.log("entrou aqui");
     try {
       const { data } = await api.get("/subject");
+      console.log(data, "123123123123123")
       return data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

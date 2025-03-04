@@ -39,4 +39,16 @@ export const TaskService = {
       }
     }
   },
+  delete: async (id: string) => {
+    try {
+      const { data } = await api.delete(`/task/${id}`);
+      return data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw new Error(
+          `Status: ${error.response.status}, Message: ${error.response.data.message}`,
+        );
+      }
+    }
+  }
 };

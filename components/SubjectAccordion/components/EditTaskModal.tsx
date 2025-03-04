@@ -20,11 +20,10 @@ import { useForm } from "react-hook-form";
 import zod from "zod";
 type CreateTaskModalProps = {
 
-  idSubject: string;
   data: Task;
   trigger: ReactNode;
 };
-export function EditTaskModal({ idSubject, data, trigger }: CreateTaskModalProps) {
+export function EditTaskModal({ data, trigger }: CreateTaskModalProps) {
   const mutation = userTaskQueryUpdate();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);

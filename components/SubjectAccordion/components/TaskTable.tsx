@@ -22,19 +22,21 @@ import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { EditTaskModal } from "./EditTaskModal";
+import { useTaskQueryDelete } from "@/api/queries/task/taskQuery";
 
 type TaskProps = {
   idSubject: string;
   tasks: Task[];
 };
 export function TaskTable({ idSubject, tasks }: TaskProps) {
-  const mutation = useReviewQueryMutation();
+  const mutationReview = useReviewQueryMutation();
+  const mutationTask = useTaskQueryDelete();
   const queryClient = useQueryClient();
   const [openDialogCreate, setOpenDialogCreate] = useState(false);
 
 
   async function onClickCheckboxReview(item: Review) {
-    mutation.mutate(
+    mutationReview.mutate(
       {
         id: item.id,
         completed: !item.completed,
@@ -43,6 +45,7 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
         onSuccess: (data) => {
           queryClient.setQueryData(["subjects"], (currentData: Subject[]) =>
             currentData.map((subject) => {
+                console.log(subject, "aquiii")
               if (subject.id === data.subject_id) {
                 return {
                   ...subject,
@@ -50,6 +53,7 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
                     if (task.id === data.id) {
                       return {
                         ...task,
+                        completed: data.completed,
                         review: data.review,
                       };
                     }
@@ -65,8 +69,26 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
     );
   }
 
-  async function onClickCompleteAllTasks(item: Task) {}
-  console.log(tasks);
+
+
+  async function onClickDeleteTask(id: string) {
+    
+    mutationTask.mutate(id, {
+      onSuccess: (data) => {
+        queryClient.setQueryData(["subjects"], (currentData: Subject[]) =>
+          currentData.map((subject) => {
+            if (subject.id === idSubject) {
+              return {
+                ...subject,
+                task: subject.task.filter((task) => task.id !== id),
+              };
+            }
+            return subject;
+          }),
+        );
+      }
+    });
+  }
   return (
     <>
       <Table>
@@ -114,13 +136,14 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
                   <Checkbox
                     checked={task.completed}
                     className="border-details"
-                    onClick={() => onClickCompleteAllTasks(task)}
+                    // onClick={() => onClickCompleteAllTasks(task)}
                   />
                 </div>
               </TableCell>
-              <TableCell className="flex gap-2">
+              <TableCell >
+                <div className="flex items-center justify-center gap-2">
+
                 <EditTaskModal
-                  idSubject={idSubject}
                   data={task}
                   trigger={
                     <Pen
@@ -129,7 +152,8 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
                   }
                 />
 
-                <Trash2 className="size-4 text-red-600" />
+                <Trash2 className="size-4 text-red-600" onClick={() => onClickDeleteTask(task.id)} />
+                </div>
               </TableCell>
             </TableRow>
           ))}
