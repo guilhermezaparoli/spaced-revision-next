@@ -26,4 +26,17 @@ export const TaskService = {
       }
     }
   },
+  create: async ({ id, name, description }: TaskProps) => {
+    try {
+      const { data } = await api.post(`/task/${id}`, { name, description });
+      console.log({ data });
+      return data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw new Error(
+          `Status: ${error.response.status}, Message: ${error.response.data.message}`,
+        );
+      }
+    }
+  },
 };

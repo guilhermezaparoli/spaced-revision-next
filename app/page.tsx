@@ -5,7 +5,7 @@ import {
   useSubjectQueryMutationCreate,
 } from "@/api/queries/subject/subjectQuery";
 import { SubjectService } from "@/api/services/subject/subjectService";
-import { SubjectAccordion } from "@/components/SubjectAccordion";
+import { SubjectAccordion } from "@/components/SubjectAccordion/SubjectAccordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,7 +40,7 @@ export default function Home() {
   const queryClient = useQueryClient();
   const zodSchema = zod.object({
     name: zod.string().min(3, "Nome muito curto").max(50, "Nome muito longo"),
-    intervalo: zod.array(zod.number()),
+    intervals: zod.array(zod.number()),
   });
 
   const {
@@ -48,15 +48,16 @@ export default function Home() {
     handleSubmit,
     formState: { errors },
     getValues,
+    reset,
   } = useForm({
     resolver: zodResolver(zodSchema),
     defaultValues: {
       name: "",
-      intervalo: [1, 7, 14, 30, 60],
+      intervals: [1, 7, 14, 30, 60],
     },
   });
 
-  async function onHandleSubmit(data: { name: string; intervalo: number[] }) {
+  async function onHandleSubmit(data: { name: string; intervals: number[] }) {
     mutationSubjectCreate.mutate(data, {
       onSuccess: (data) => {
         queryClient.setQueryData(["subjects"], (currentData: Subject[]) => [
@@ -67,6 +68,7 @@ export default function Home() {
     });
 
     setOpenModal(false);
+    reset()
   }
 
   console.log(errors, "12312");
@@ -139,14 +141,14 @@ export default function Home() {
                   />
                 </div>
                 <div className="">
-                  <Label htmlFor="intervalo" className="text-right text-white">
+                  <Label htmlFor="intervals" className="text-right text-white">
                     Intervalos de revisões
                   </Label>
                   <Input
-                    id="intervalo"
+                    id="intervals"
                     className="col-span-3 text-white"
                     placeholder="Digite o intervalo"
-                    {...register("intervalo")}
+                    {...register("intervals")}
                   />
                 </div>
               </div>

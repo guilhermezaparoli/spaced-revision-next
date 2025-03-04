@@ -12,3 +12,16 @@ export const useTaskQuery = () => {
         mutationFn: ({id, name, description, completed}: TaskProps) => TaskService.update({id, name, description, completed}),
     })
 }
+
+
+export const useTaskQueryCreate = () => {
+    return useMutation({
+        mutationFn: ( {id, name, description}: TaskProps) => TaskService.create({id, name, description}),
+    })
+}
+
+export const userTaskQueryUpdate = () => {
+    return useMutation({
+        mutationFn: ({id, name, description}: TaskProps) => TaskService.update({id, name, description}),
+    })
+}
