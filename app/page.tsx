@@ -80,7 +80,7 @@ export default function Home() {
   async function onHandleLogout() {
     mutationAuthLogout.mutate(null, {
       onSuccess: () => {
-        router.push("/login");
+        router.push("/signin");
       },
       onError: (error) => {
         console.error("Logout failed:", error);

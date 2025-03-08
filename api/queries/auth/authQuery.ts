@@ -9,7 +9,6 @@ export const useLogin = () => {
 }
 
 export const useAuthQueryMutationLogout = () => {
-    console.log("aqui foi")
     return useMutation({
         mutationFn: AuthService.logout,
     })

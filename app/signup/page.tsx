@@ -15,19 +15,24 @@ import Link from "next/link";
 import { useEffect, useTransition } from "react";
 import { AuthService } from "@/api/services/auth/authService";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
+import { string, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
-export default function Login() {
-  const zodSchema = z.object({
-    email: z.string().email(),
-    password_hash: z.string().min(8),
-  });
+export default function Signup() {
   const [isPending, startTransiction] = useTransition()
   const router = useRouter()
 
+
+
+
+
+  const zodSchema = z.object({
+    email: z.string().email(),
+    password_hash: z.string().min(8),
+    name: string().min(3).max(50),
+  });
   const {
     register,
     handleSubmit,
@@ -38,23 +43,12 @@ export default function Login() {
     defaultValues: {
       email: "guilhermezapas2@gmail.com",
       password_hash: "OvoPascoa120@",
+      name: "Guilherme"
     }
   });
 
   async function onSubmit() {
-    startTransiction(async () =>{
-      const {status, message} =  await AuthService.login({
-        email: "guilhermezapas2@gmail.com",
-        password_hash: "OvoPascoa120@",
-      });
-  
-      if(status === 200){
-        router.push('/')
-      }
-        
-    console.log(status)
-    console.log(message)
-    })
+
 
   }
   
@@ -88,7 +82,7 @@ export default function Login() {
 
         <Card className="flex w-full max-w-[500px] flex-col items-center border border-borderGray bg-darkbg">
           <CardHeader className="text-xl font-semibold text-white">
-            Login
+            Cadastre-se
           </CardHeader>
 
           <CardContent className="flex w-full flex-col gap-4 px-8">
@@ -96,11 +90,17 @@ export default function Login() {
               <Button className="mb-4 w-full bg-secondaryButton transition-colors">
                 Google
               </Button>
-              {/* <Button className="bg-secondaryButton mb-4 w-full transition-colors">
-                <span>Facebook</span>
-              </Button> */}
             </div>
             <h1 className="text-center text-details">ou</h1>
+            <div className="w-full text-white">
+              <Label id="name" className="text-base text-white">Nome</Label>
+              <Input
+                className="h-10 w-full rounded-lg border-details pl-3 text-white"
+                id="name"
+                placeholder="Digite seu nome"
+                {...register("name")}
+              />
+            </div>
             <div className="w-full text-white">
               <Label className="text-base text-white">Email</Label>
               <Input
@@ -111,12 +111,10 @@ export default function Login() {
               />
             </div>
             <div className="w-full text-white">
-              <div className="flex justify-between">
+              
                 <Label className="text-base text-white">Senha</Label>
-                <Link href="" className="text-sm text-white">
-                  Esqueceu?
-                </Link>
-              </div>
+            
+           
               <Input
                 className="h-10 w-full rounded-lg border-details pl-3 text-white"
                 type="password"
@@ -125,14 +123,17 @@ export default function Login() {
               />
             </div>
           </CardContent>
-          <CardFooter className="w-full px-8">
+          <CardFooter className="w-full px-8 flex flex-col gap-2s">
             <Button
               onClick={handleSubmit(onSubmit)}
               className="mb-4 w-full bg-primaryButton transition-colors"
               disabled={isPending}
             >
-              {isPending ? <Loader2 className="animate-spin" /> : "Entrar"}
+              {isPending ? <Loader2 className="animate-spin" /> : "Criar conta"}
             </Button>
+
+
+            <Link href="/signin" className="text-details text-sm hover:opacity-70 transition-colors">Já possuo uma conta</Link>
           </CardFooter>
         </Card>
       </div>
