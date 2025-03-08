@@ -14,3 +14,9 @@ export type LoginProps = {
     };
   };
   
+
+  export type Register = {
+    email: string;
+    password_hash: string;
+    name: string;
+  };

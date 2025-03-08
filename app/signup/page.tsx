@@ -19,14 +19,13 @@ import { string, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { Register } from "@/@types/auth";
+import { useAuthQueryMutationRegister } from "@/api/queries/auth/authQuery";
 
 export default function Signup() {
-  const [isPending, startTransiction] = useTransition()
-  const router = useRouter()
-
-
-
-
+  const [isPending, startTransiction] = useTransition();
+  const router = useRouter();
+  const mutationRegister = useAuthQueryMutationRegister();
 
   const zodSchema = z.object({
     email: z.string().email(),
@@ -37,24 +36,26 @@ export default function Signup() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    
   } = useForm({
     resolver: zodResolver(zodSchema),
     defaultValues: {
       email: "guilhermezapas2@gmail.com",
       password_hash: "OvoPascoa120@",
-      name: "Guilherme"
-    }
+      name: "Guilherme",
+    },
   });
 
-  async function onSubmit() {
-
-
+  async function onSubmit(data: Register) {
+    mutationRegister.mutate(data, {
+      onSuccess: () => {
+        router.push("/");
+      },
+    });
+    console.log({ data });
   }
-  
 
-  console.log(errors)
-  console.log({isPending})
+  console.log(errors);
+  console.log({ isPending });
   return (
     <div className="md:grid md:grid-cols-2">
       <div className="hidden bg-hero p-10 md:flex md:flex-col md:justify-between">
@@ -93,7 +94,9 @@ export default function Signup() {
             </div>
             <h1 className="text-center text-details">ou</h1>
             <div className="w-full text-white">
-              <Label id="name" className="text-base text-white">Nome</Label>
+              <Label id="name" className="text-base text-white">
+                Nome
+              </Label>
               <Input
                 className="h-10 w-full rounded-lg border-details pl-3 text-white"
                 id="name"
@@ -111,10 +114,8 @@ export default function Signup() {
               />
             </div>
             <div className="w-full text-white">
-              
-                <Label className="text-base text-white">Senha</Label>
-            
-           
+              <Label className="text-base text-white">Senha</Label>
+
               <Input
                 className="h-10 w-full rounded-lg border-details pl-3 text-white"
                 type="password"
@@ -123,7 +124,7 @@ export default function Signup() {
               />
             </div>
           </CardContent>
-          <CardFooter className="w-full px-8 flex flex-col gap-2s">
+          <CardFooter className="gap-2s flex w-full flex-col px-8">
             <Button
               onClick={handleSubmit(onSubmit)}
               className="mb-4 w-full bg-primaryButton transition-colors"
@@ -132,8 +133,12 @@ export default function Signup() {
               {isPending ? <Loader2 className="animate-spin" /> : "Criar conta"}
             </Button>
 
-
-            <Link href="/signin" className="text-details text-sm hover:opacity-70 transition-colors">Já possuo uma conta</Link>
+            <Link
+              href="/signin"
+              className="text-sm text-details transition-colors hover:opacity-70"
+            >
+              Já possuo uma conta
+            </Link>
           </CardFooter>
         </Card>
       </div>

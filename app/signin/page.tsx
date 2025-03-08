@@ -19,48 +19,38 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { LoginProps } from "@/@types/auth";
+import { useAuthMutationLogin } from "@/api/queries/auth/authQuery";
 
 export default function Signin() {
   const zodSchema = z.object({
     email: z.string().email(),
     password_hash: z.string().min(8),
   });
-  const [isPending, startTransiction] = useTransition()
-  const router = useRouter()
+  const router = useRouter();
+  const mutationLogin = useAuthMutationLogin();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    
   } = useForm({
     resolver: zodResolver(zodSchema),
     defaultValues: {
       email: "guilhermezapas2@gmail.com",
       password_hash: "OvoPascoa120@",
-    }
+    },
   });
 
-  async function onSubmit() {
-    startTransiction(async () =>{
-      const {status, message} =  await AuthService.login({
-        email: "guilhermezapas2@gmail.com",
-        password_hash: "OvoPascoa120@",
-      });
-  
-      if(status === 200){
-        router.push('/')
-      }
-        
-    console.log(status)
-    console.log(message)
-    })
-
+  async function onSubmit(data: LoginProps) {
+    mutationLogin.mutate(data, {
+      onSuccess: () => {
+        router.push("/");
+      },
+    });
   }
-  
 
-  console.log(errors)
-  console.log({isPending})
+
   return (
     <div className="md:grid md:grid-cols-2">
       <div className="hidden bg-hero p-10 md:flex md:flex-col md:justify-between">
@@ -125,15 +115,20 @@ export default function Signin() {
               />
             </div>
           </CardContent>
-          <CardFooter className="w-full px-8 flex flex-col gap-2">
+          <CardFooter className="flex w-full flex-col gap-2 px-8">
             <Button
               onClick={handleSubmit(onSubmit)}
               className="mb-4 w-full bg-primaryButton transition-colors"
-              disabled={isPending}
+              disabled={mutationLogin.isPending}
             >
-              {isPending ? <Loader2 className="animate-spin" /> : "Entrar"}
+              {mutationLogin.isPending ? <Loader2 className="animate-spin" /> : "Entrar"}
             </Button>
-            <Link href="/signup" className="text-details text-sm hover:opacity-70 transition-colors">Ainda não possuo uma conta </Link>
+            <Link
+              href="/signup"
+              className="text-sm text-details transition-colors hover:opacity-70"
+            >
+              Ainda não possuo uma conta{" "}
+            </Link>
           </CardFooter>
         </Card>
       </div>
