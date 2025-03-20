@@ -5,7 +5,9 @@ export const useSubjectQuery =  () => {
     return useQuery({
         queryKey: ["subjects"],
         queryFn: SubjectService.getAll,
-    }, )
+        initialData: [],
+    },
+ )
     
 }
 

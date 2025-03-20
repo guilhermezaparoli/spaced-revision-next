@@ -6,6 +6,7 @@ import {
   useSubjectQueryMutationCreate,
 } from "@/api/queries/subject/subjectQuery";
 import { SubjectService } from "@/api/services/subject/subjectService";
+import Loader from "@/components/Loader";
 import { SubjectAccordion } from "@/components/SubjectAccordion/SubjectAccordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -38,7 +39,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import zod from "zod";
 export default function Home() {
-  const { data, isLoading, status } = useSubjectQuery();
+  const { data, isPending, status } = useSubjectQuery();
   const [openModal, setOpenModal] = useState(false);
   const mutationSubjectCreate = useSubjectQueryMutationCreate();
   const mutationAuthLogout = useAuthQueryMutationLogout();
@@ -84,10 +85,10 @@ export default function Home() {
       },
       onError: (error) => {
         console.error("Logout failed:", error);
-      }
+      },
     });
   }
-  
+
   console.log(errors, "12312");
   return (
     <div className="h-screen bg-darkbg p-3">
@@ -133,9 +134,9 @@ export default function Home() {
         <div className="flex flex-col gap-2">
           <Dialog open={openModal} onOpenChange={setOpenModal}>
             <DialogTrigger asChild>
-              <Button className="mb-4 flex w-24 items-center gap-2 bg-primaryButton text-white transition-colors hover:bg-primaryButton/80">
+              <Button className="mb-4 flex w-36 items-center gap-2 bg-primaryButton text-white transition-colors hover:bg-primaryButton/80">
                 <Plus className="size-6" />
-                <span>Adicionar</span>
+                <span>Nova matéria</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
@@ -182,9 +183,18 @@ export default function Home() {
           </Dialog>
 
           {status == "success" &&
-            data.map((subject) => (
+            data.map((subject: Subject) => (
               <SubjectAccordion key={subject.id} subject={subject} />
             ))}
+
+          {status == "success" && data.length === 0 && (
+            <div className="flex flex-col items-center justify-center">
+              <p className="text-lg text-white">Nenhuma matéria cadastrada</p>
+            </div>
+          )}
+          {console.log(isPending, "loaderr")}
+          {isPending && <Loader />}
+          
         </div>
       </main>
       <footer></footer>
