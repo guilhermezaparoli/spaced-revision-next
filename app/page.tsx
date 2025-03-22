@@ -5,7 +5,7 @@ import {
   useSubjectQuery,
   useSubjectQueryMutationCreate,
 } from "@/api/queries/subject/subjectQuery";
-import { SubjectService } from "@/api/services/subject/subjectService";
+
 import Loader from "@/components/Loader";
 import { SubjectAccordion } from "@/components/SubjectAccordion/SubjectAccordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -91,7 +91,7 @@ export default function Home() {
 
   console.log(errors, "12312");
   return (
-    <div className="h-screen bg-darkbg p-3">
+    <div className="min-h-screen bg-darkbg p-3">
       <header className="flex items-center justify-between">
         <p>teste</p>
         <div className="flex flex-col items-center">
@@ -106,13 +106,16 @@ export default function Home() {
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
               <CircleUserIcon />
-              <DropdownMenuItem>Ver perfil</DropdownMenuItem>
+              <p>Ver perfil</p>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem onClick={onHandleLogout}>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={onHandleLogout}
+            >
               <LogOutIcon className="text-red-600" />
               <p>Sair</p>
             </DropdownMenuItem>
@@ -131,7 +134,7 @@ export default function Home() {
           </label>
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="ga</div>p-2 flex flex-col">
           <Dialog open={openModal} onOpenChange={setOpenModal}>
             <DialogTrigger asChild>
               <Button className="mb-4 flex w-36 items-center gap-2 bg-primaryButton text-white transition-colors hover:bg-primaryButton/80">
@@ -182,19 +185,19 @@ export default function Home() {
             </DialogContent>
           </Dialog>
 
-          {status == "success" &&
-            data.map((subject: Subject) => (
+          <div className="flex flex-col gap-4">
+            {data?.map((subject) => (
               <SubjectAccordion key={subject.id} subject={subject} />
             ))}
+          </div>
 
-          {status == "success" && data.length === 0 && (
+          {data?.length === 0 && (
             <div className="flex flex-col items-center justify-center">
               <p className="text-lg text-white">Nenhuma matéria cadastrada</p>
             </div>
           )}
-          {console.log(isPending, "loaderr")}
+
           {isPending && <Loader />}
-          
         </div>
       </main>
       <footer></footer>

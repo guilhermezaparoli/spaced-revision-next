@@ -34,7 +34,6 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
   const queryClient = useQueryClient();
   const [openDialogCreate, setOpenDialogCreate] = useState(false);
 
-
   async function onClickCheckboxReview(item: Review) {
     mutationReview.mutate(
       {
@@ -45,7 +44,7 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
         onSuccess: (data) => {
           queryClient.setQueryData(["subjects"], (currentData: Subject[]) =>
             currentData.map((subject) => {
-                console.log(subject, "aquiii")
+              console.log(subject, "aquiii");
               if (subject.id === data.subject_id) {
                 return {
                   ...subject,
@@ -69,10 +68,7 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
     );
   }
 
-
-
   async function onClickDeleteTask(id: string) {
-    
     mutationTask.mutate(id, {
       onSuccess: (data) => {
         queryClient.setQueryData(["subjects"], (currentData: Subject[]) =>
@@ -86,15 +82,15 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
             return subject;
           }),
         );
-      }
+      },
     });
   }
   return (
     <>
-      <Table>
+      <Table className="table-auto">
         <TableHeader>
           <TableRow>
-            <TableHead className="min-w-[130px]">Título</TableHead>
+            <TableHead className="whitespace-nowrap w-0 flex-1">Título</TableHead>
             <TableHead className="min-w-[170px]">Descrição</TableHead>
 
             {tasks?.[0]?.review.map((task, index) => (
@@ -114,7 +110,7 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
                 index % 2 === 0 ? "bg-rowAccordionEven" : "bg-rowAccordionOdd"
               }
             >
-              <TableCell className="font-medium">{task.name}</TableCell>
+             <TableCell className="whitespace-nowrap w-0 flex-1 font-medium">{task.name}</TableCell>
               <TableCell className="w-36">{task.description}</TableCell>
               {task.review.map((review) => (
                 <TableCell key={review.id}>
@@ -135,46 +131,40 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
                 <div className="flex items-center justify-center">
                   <Checkbox
                     checked={task.completed}
-                    className="border-details"
+                    className="border-details cursor-not-allowed"
                     // onClick={() => onClickCompleteAllTasks(task)}
                   />
                 </div>
               </TableCell>
-              <TableCell >
+              <TableCell>
                 <div className="flex items-center justify-center gap-2">
+                  <EditTaskModal
+                    data={task}
+                    trigger={<Pen className="size-4 text-blue-500" />}
+                  />
 
-                <EditTaskModal
-                  data={task}
-                  trigger={
-                    <Pen
-                      className="size-4 text-blue-500"
-                    />
-                  }
-                />
-
-                <Trash2 className="size-4 text-red-600" onClick={() => onClickDeleteTask(task.id)} />
+                  <Trash2
+                    className="size-4 text-red-600 cursor-pointer"
+                    onClick={() => onClickDeleteTask(task.id)}
+                  />
                 </div>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
-        <TableFooter>
-          <TableRow className="bg-rowAccordionEven">
-            <TableCell colSpan={3}>
-              <Button
-                className="h-6 bg-green-700 p-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setOpenDialogCreate(true);
-                }}
-              >
-                <Plus className="size-5" />
-                <Label>Nova revisão</Label>
-              </Button>
-            </TableCell>
-          </TableRow>
-        </TableFooter>
       </Table>
+      <div className="mt-4 ml-2">
+        <Button
+          className="h-6 cursor-pointer bg-green-700 p-2"
+          onClick={(e) => {
+            e.preventDefault();
+            setOpenDialogCreate(true);
+          }}
+        >
+          <Plus className="size-5" />
+          <Label className="cursor-pointer">Nova revisão</Label>
+        </Button>
+      </div>
       <CreateTaskModal
         open={openDialogCreate}
         setOpen={setOpenDialogCreate}

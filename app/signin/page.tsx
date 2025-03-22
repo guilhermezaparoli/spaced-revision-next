@@ -92,8 +92,9 @@ export default function Signin() {
             </div>
             <h1 className="text-center text-details">ou</h1>
             <div className="w-full text-white">
-              <Label className="text-base text-white">Email</Label>
+              <Label htmlFor="email" className="text-base text-white">Email</Label>
               <Input
+              id="email"
                 className="h-10 w-full rounded-lg border-details pl-3 text-white"
                 type="email"
                 placeholder="Digite seu e-mail"
@@ -102,12 +103,13 @@ export default function Signin() {
             </div>
             <div className="w-full text-white">
               <div className="flex justify-between">
-                <Label className="text-base text-white">Senha</Label>
+                <Label htmlFor="senha" className="text-base text-white">Senha</Label>
                 <Link href="" className="text-sm text-white">
                   Esqueceu?
                 </Link>
               </div>
               <Input
+              id="senha"
                 className="h-10 w-full rounded-lg border-details pl-3 text-white"
                 type="password"
                 placeholder="Digite sua senha"

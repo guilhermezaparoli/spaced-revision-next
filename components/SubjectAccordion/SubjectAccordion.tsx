@@ -6,47 +6,19 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
-import { Checkbox } from "../ui/checkbox";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
+
 import dayjs from "dayjs";
 import { useState } from "react";
-import { Task } from "@/@types/task";
-import { Review } from "@/@types/review";
-import { EllipsisVertical, Pen, Plus, Trash2 } from "lucide-react";
+import { EllipsisVertical, Pen, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import zod from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useReviewQueryMutation } from "@/api/queries/review/useReviewQueyMutation";
+
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  useSubjectQueryMutationDelete,
-  useSubjectQueryMutationUpdate,
-} from "@/api/queries/subject/subjectQuery";
-import { CreateTaskModal } from "./components/CreateTaskModal";
+import { useSubjectQueryMutationDelete } from "@/api/queries/subject/subjectQuery";
 import { EditSubjectModal } from "./components/EditSubjectModal";
 import { TaskTable } from "./components/TaskTable";
 
@@ -69,8 +41,8 @@ export function SubjectAccordion({ subject }: { subject: Subject }) {
   return (
     <>
       <Accordion type="single" collapsible className="w-full">
-        <AccordionItem value="item-1" className="border-b-0">
-          <AccordionTrigger className="h-11 w-full rounded-lg bg-accordion p-2 text-start text-white">
+        <AccordionItem value="item-1" className="group border-b-0">
+          <AccordionTrigger className="h-11 w-full rounded-lg bg-accordion p-2 text-start text-white group-data-[state=open]:rounded-b-none">
             <div className="flex w-full items-center justify-between">
               <p>{subject.name}</p>
               <DropdownMenu>
@@ -79,6 +51,7 @@ export function SubjectAccordion({ subject }: { subject: Subject }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem
+                    className="cursor-pointer"
                     onClick={(e) => {
                       e.stopPropagation();
                       onHandleDeleteSubject(subject.id);
@@ -88,6 +61,7 @@ export function SubjectAccordion({ subject }: { subject: Subject }) {
                     <p>Deletar</p>
                   </DropdownMenuItem>
                   <DropdownMenuItem
+                    className="cursor-pointer"
                     onClick={(e) => {
                       e.stopPropagation();
                       setOpenModalEdit(true);

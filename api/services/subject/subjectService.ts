@@ -7,11 +7,10 @@ type Subject = {
 };
 
 export const SubjectService = {
-  getAll: async () => {
+  getAll: async (): Promise<Subject[]> => {
     console.log("entrou aqui");
     try {
-      const { data } = await api.get("/subject");
-      console.log(data, "123123123123123")
+      const { data } = await api.get<Subject[]>("/subject");
       return data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -20,10 +19,11 @@ export const SubjectService = {
         );
       }
     }
+    throw new Error("An unexpected error occurred");
   },
-  create: async (body: Subject) => {
+  create: async (body: Subject): Promise<Subject> => {
     try {
-      const { data } = await api.post("/subject/create", body);
+      const { data } = await api.post<Subject>("/subject/create", body);
       return data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -31,11 +31,12 @@ export const SubjectService = {
           `Status: ${error.response.status}, Message: ${error.response.data.message}`,
         );
       }
+      throw new Error("An unexpected error occurred");
     }
   },
-  update: async (id: string, body: Subject) => {
+  update: async (id: string, body: Subject): Promise<Subject> => {
     try {
-      const { data } = await api.put(`/subject/${id}`, {
+      const { data } = await api.put<Subject>(`/subject/${id}`, {
         name: body.name,
       });
       return data;
@@ -46,6 +47,7 @@ export const SubjectService = {
         );
       }
     }
+    throw new Error("An unexpected error occurred");
   },
   delete: async (id: string) => {
     try {

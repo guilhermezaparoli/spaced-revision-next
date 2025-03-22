@@ -1,7 +1,8 @@
+import { Subject } from "@/@types/subject"
 import { SubjectService } from "@/api/services/subject/subjectService"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { DefinedUseQueryResult, useMutation, useQuery } from "@tanstack/react-query"
 
-export const useSubjectQuery =  () => {
+export const useSubjectQuery =  (): DefinedUseQueryResult<Subject[]> => {
     return useQuery({
         queryKey: ["subjects"],
         queryFn: SubjectService.getAll,
