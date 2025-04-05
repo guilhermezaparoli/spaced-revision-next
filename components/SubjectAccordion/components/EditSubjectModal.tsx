@@ -53,7 +53,8 @@ export function EditSubjectModal({
     mutationSubjectUpdate.mutate(
       {
         id: subject.id,
-        data,
+        name: data.name,
+        task: subject.task,
       },
       {
         onSuccess: (data) => {

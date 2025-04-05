@@ -20,14 +20,14 @@ type UpdateSubject = {
 }
 export const useSubjectQueryMutationUpdate = () => {
     return useMutation({
-        mutationFn: ({id, data}: UpdateSubject) => SubjectService.update(id, data),
+        mutationFn: ({id, name}: Subject) => SubjectService.update(id, name),
     })
 }
 
 
 export const useSubjectQueryMutationCreate = () => {
     return useMutation({
-        mutationFn: (data: {name: string}) => SubjectService.create(data),
+        mutationFn: (data: Partial<Subject>) => SubjectService.create(data),
     })
 }
 

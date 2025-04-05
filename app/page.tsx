@@ -63,7 +63,9 @@ export default function Home() {
     },
   });
 
-  async function onHandleSubmit(data: { name: string; intervals: number[] }) {
+  type zodSchemaType = zod.infer<typeof zodSchema>;
+
+  async function onHandleSubmit(data: zodSchemaType) {
     mutationSubjectCreate.mutate(data, {
       onSuccess: (data) => {
         queryClient.setQueryData(["subjects"], (currentData: Subject[]) => [

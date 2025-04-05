@@ -1,13 +1,11 @@
 import axios from "axios";
 import api from "../../api";
+import { Subject } from "@/@types/subject";
 
-type Subject = {
-  name: string;
-  interval?: number[];
-};
+
 
 export const SubjectService = {
-  getAll: async (): Promise<Subject[]> => {
+  getAll: async () => {
     console.log("entrou aqui");
     try {
       const { data } = await api.get<Subject[]>("/subject");
@@ -21,7 +19,7 @@ export const SubjectService = {
     }
     throw new Error("An unexpected error occurred");
   },
-  create: async (body: Subject): Promise<Subject> => {
+  create: async (body: Partial<Subject>) => {
     try {
       const { data } = await api.post<Subject>("/subject/create", body);
       return data;
@@ -34,10 +32,10 @@ export const SubjectService = {
       throw new Error("An unexpected error occurred");
     }
   },
-  update: async (id: string, body: Subject): Promise<Subject> => {
+  update: async (id: string, name: string) => {
     try {
       const { data } = await api.put<Subject>(`/subject/${id}`, {
-        name: body.name,
+        name,
       });
       return data;
     } catch (error) {
