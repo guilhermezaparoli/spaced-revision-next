@@ -1,26 +1,23 @@
 "use client";
-import Image from "next/image";
-import background from "../../public/background-space.png";
+import { LoginProps } from "@/@types/auth";
+import { useAuthMutationLogin } from "@/api/queries/auth/authQuery";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
-  CardHeader,
+  CardHeader
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import { useEffect, useTransition } from "react";
-import { AuthService } from "@/api/services/auth/authService";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
+import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { LoginProps } from "@/@types/auth";
-import { useAuthMutationLogin } from "@/api/queries/auth/authQuery";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import background from "../../public/background-space.png";
 
 export default function Signin() {
   const zodSchema = z.object({

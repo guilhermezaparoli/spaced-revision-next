@@ -23,9 +23,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -79,7 +78,7 @@ export default function Home() {
   }
 
   async function onHandleLogout() {
-    mutationAuthLogout.mutate(null, {
+    mutationAuthLogout.mutate(undefined, {
       onSuccess: () => {
         router.push("/signin");
       },
@@ -134,11 +133,11 @@ export default function Home() {
           </label>
         </div>
 
-        <div className="ga</div>p-2 flex flex-col">
+        <div className="flex flex-col">
           <Dialog open={openModal} onOpenChange={setOpenModal}>
             <DialogTrigger asChild>
               <Button className="mb-4 flex w-36 items-center gap-2 bg-primaryButton text-white transition-colors hover:bg-primaryButton/80">
-                <Plus className="size-6" />
+                <Plus className="size-6 text-white" />
                 <span>Nova matéria</span>
               </Button>
             </DialogTrigger>

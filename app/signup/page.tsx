@@ -1,26 +1,24 @@
 "use client";
-import Image from "next/image";
-import background from "../../public/background-space.png";
+import { Register } from "@/@types/auth";
+import { useAuthQueryMutationRegister } from "@/api/queries/auth/authQuery";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
-  CardHeader,
+  CardHeader
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import { useEffect, useTransition } from "react";
-import { AuthService } from "@/api/services/auth/authService";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { string, z } from "zod";
+import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { Register } from "@/@types/auth";
-import { useAuthQueryMutationRegister } from "@/api/queries/auth/authQuery";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { string, z } from "zod";
+import background from "../../public/background-space.png";
 
 export default function Signup() {
   const [isPending, startTransiction] = useTransition();

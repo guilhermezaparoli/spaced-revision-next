@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import zod from "zod";
+import zod, { infer } from "zod";
 
 type CreateTaskModalProps = {
   open: boolean;
@@ -35,6 +35,7 @@ export function EditSubjectModal({
     intervalo: zod.array(zod.number()),
   });
 
+  type FormData = zod.infer<typeof zodSchema>;
   const {
     register,
     handleSubmit,
@@ -48,7 +49,7 @@ export function EditSubjectModal({
     },
   });
 
-  async function onHandleEditSubmit(data: Subject) {
+  async function onHandleEditSubmit(data: FormData) {
     mutationSubjectUpdate.mutate(
       {
         id: subject.id,
