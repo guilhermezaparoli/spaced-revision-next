@@ -12,12 +12,6 @@ export const useSubjectQuery =  (): DefinedUseQueryResult<Subject[]> => {
     
 }
 
-type UpdateSubject = {
-    id: string;
-    data: {
-        name: string;
-    }
-}
 export const useSubjectQueryMutationUpdate = () => {
     return useMutation({
         mutationFn: ({id, name}: Subject) => SubjectService.update(id, name),

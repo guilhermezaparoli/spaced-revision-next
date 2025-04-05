@@ -6,38 +6,21 @@ import {
   Card,
   CardContent,
   CardFooter,
-  CardHeader
+  CardHeader,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import background from "../../public/background-space.png";
+import useSignin from "./useSignin";
 
 export default function Signin() {
-  const zodSchema = z.object({
-    email: z.string().email(),
-    password_hash: z.string().min(8),
-  });
-  const router = useRouter();
   const mutationLogin = useAuthMutationLogin();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm({
-    resolver: zodResolver(zodSchema),
-    defaultValues: {
-      email: "guilhermezapas2@gmail.com",
-      password_hash: "OvoPascoa120@",
-    },
-  });
+  const router = useRouter();
+  const { register, handleSubmit } = useSignin();
 
   async function onSubmit(data: LoginProps) {
     mutationLogin.mutate(data, {
@@ -46,7 +29,6 @@ export default function Signin() {
       },
     });
   }
-
 
   return (
     <div className="md:grid md:grid-cols-2">
@@ -89,9 +71,11 @@ export default function Signin() {
             </div>
             <h1 className="text-center text-details">ou</h1>
             <div className="w-full text-white">
-              <Label htmlFor="email" className="text-base text-white">Email</Label>
+              <Label htmlFor="email" className="text-base text-white">
+                Email
+              </Label>
               <Input
-              id="email"
+                id="email"
                 className="h-10 w-full rounded-lg border-details pl-3 text-white"
                 type="email"
                 placeholder="Digite seu e-mail"
@@ -100,13 +84,15 @@ export default function Signin() {
             </div>
             <div className="w-full text-white">
               <div className="flex justify-between">
-                <Label htmlFor="senha" className="text-base text-white">Senha</Label>
+                <Label htmlFor="senha" className="text-base text-white">
+                  Senha
+                </Label>
                 <Link href="" className="text-sm text-white">
                   Esqueceu?
                 </Link>
               </div>
               <Input
-              id="senha"
+                id="senha"
                 className="h-10 w-full rounded-lg border-details pl-3 text-white"
                 type="password"
                 placeholder="Digite sua senha"
@@ -120,7 +106,11 @@ export default function Signin() {
               className="mb-4 w-full bg-primaryButton transition-colors"
               disabled={mutationLogin.isPending}
             >
-              {mutationLogin.isPending ? <Loader2 className="animate-spin" /> : "Entrar"}
+              {mutationLogin.isPending ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                "Entrar"
+              )}
             </Button>
             <Link
               href="/signup"
