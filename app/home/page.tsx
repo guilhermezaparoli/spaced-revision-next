@@ -24,7 +24,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,7 +38,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import zod from "zod";
 export default function Home() {
-  const { data, isLoading, isPending, status } = useSubjectQuery();
+  const { data, isFetching } = useSubjectQuery();
   const [openModal, setOpenModal] = useState(false);
   const mutationSubjectCreate = useSubjectQueryMutationCreate();
   const mutationAuthLogout = useAuthQueryMutationLogout();
@@ -53,7 +53,6 @@ export default function Home() {
     register,
     handleSubmit,
     formState: { errors },
-    getValues,
     reset,
   } = useForm({
     resolver: zodResolver(zodSchema),
@@ -63,9 +62,7 @@ export default function Home() {
     },
   });
 
-  type zodSchemaType = zod.infer<typeof zodSchema>;
-
-  async function onHandleSubmit(data: zodSchemaType) {
+  async function onHandleSubmit(data: zod.infer<typeof zodSchema>) {
     mutationSubjectCreate.mutate(data, {
       onSuccess: (data) => {
         queryClient.setQueryData(["subjects"], (currentData: Subject[]) => [
@@ -191,13 +188,17 @@ export default function Home() {
             ))}
           </div>
 
-          {data?.length === 0 && (
+          {data?.length === 0 && !isFetching && (
             <div className="flex flex-col items-center justify-center">
               <p className="text-lg text-white">Nenhuma matéria cadastrada</p>
             </div>
           )}
 
-          {isPending && <Loader />}
+          {isFetching && (
+            <div className="flex h-full w-full items-center justify-center">
+              <Loader />
+            </div>
+          )}
         </div>
       </main>
       <footer></footer>
