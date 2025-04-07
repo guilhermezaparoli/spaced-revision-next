@@ -6,54 +6,27 @@ import {
   Card,
   CardContent,
   CardFooter,
-  CardHeader
+  CardHeader,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { string, z } from "zod";
 import background from "../../public/background-space.png";
+import { useSignup } from "./useSignup";
 
 export default function Signup() {
-  const [isPending, startTransiction] = useTransition();
-  const router = useRouter();
-  const mutationRegister = useAuthQueryMutationRegister();
-
-  const zodSchema = z.object({
-    email: z.string().email(),
-    password_hash: z.string().min(8),
-    name: string().min(3).max(50),
-  });
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm({
-    resolver: zodResolver(zodSchema),
-    defaultValues: {
-      email: "guilhermezapas2@gmail.com",
-      password_hash: "OvoPascoa120@",
-      name: "Guilherme",
-    },
-  });
+    onSubmit,
+    mutationRegister,
+    errors,
+    isSubmitting,
+  } = useSignup();
 
-  async function onSubmit(data: Register) {
-    mutationRegister.mutate(data, {
-      onSuccess: () => {
-        router.push("/");
-      },
-    });
-    console.log({ data });
-  }
-
-  console.log(errors);
-  console.log({ isPending });
   return (
     <div className="md:grid md:grid-cols-2">
       <div className="hidden bg-hero p-10 md:flex md:flex-col md:justify-between">
@@ -126,9 +99,13 @@ export default function Signup() {
             <Button
               onClick={handleSubmit(onSubmit)}
               className="mb-4 w-full bg-primaryButton transition-colors"
-              disabled={isPending}
+              disabled={mutationRegister.isPending}
             >
-              {isPending ? <Loader2 className="animate-spin" /> : "Criar conta"}
+              {mutationRegister.isPending ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                "Criar conta"
+              )}
             </Button>
 
             <Link

@@ -6,7 +6,7 @@ import { Subject } from "@/@types/subject";
 
 export const SubjectService = {
   getAll: async () => {
-    console.log("entrou aqui");
+    console.log("entrou aqui222");
     try {
       const { data } = await api.get<Subject[]>("/subject");
       return data;
