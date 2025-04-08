@@ -6,7 +6,7 @@ import {
   useSubjectQueryMutationCreate,
 } from "@/api/queries/subject/subjectQuery";
 
-import Loader from "@/components/Loader";
+import Loader from "@/components/Loader/Loader";
 import { SubjectAccordion } from "@/components/SubjectAccordion/SubjectAccordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";

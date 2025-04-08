@@ -8,21 +8,20 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
 
+import { useTaskQueryDelete } from "@/api/queries/task/taskQuery";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { Pen, Plus, Trash2 } from "lucide-react";
-import { CreateTaskModal } from "./CreateTaskModal";
 import { useState } from "react";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+import { CreateTaskModal } from "./CreateTaskModal";
 import { EditTaskModal } from "./EditTaskModal";
-import { useTaskQueryDelete } from "@/api/queries/task/taskQuery";
 
 type TaskProps = {
   idSubject: string;
@@ -70,7 +69,7 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
 
   async function onClickDeleteTask(id: string) {
     mutationTask.mutate(id, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.setQueryData(["subjects"], (currentData: Subject[]) =>
           currentData.map((subject) => {
             if (subject.id === idSubject) {
@@ -115,10 +114,9 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
               {task.review.map((review) => (
                 <TableCell key={review.id}>
                   <div className="flex items-center gap-2">
-                    <p className={`${review.completed ? "line-through" : ""}`}>
+                    <p className={`${review.completed && "line-through"} ${!review.completed && dayjs(review.review_date).isBefore(dayjs(), "day") && "text-red-500"} ${!review.completed && dayjs(review.review_date).isSame(dayjs().add(1, "day"), "day") && "text-blue-500"}  ${!review.completed && dayjs(review.review_date).isSame(dayjs()) && "text-green-500"}`}>
                       {dayjs(review.review_date).format("DD/MM/YYYY")}
                     </p>
-
                     <Checkbox
                       checked={review.completed}
                       className="border-details"
@@ -132,7 +130,6 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
                   <Checkbox
                     checked={task.completed}
                     className="border-details cursor-not-allowed"
-                    // onClick={() => onClickCompleteAllTasks(task)}
                   />
                 </div>
               </TableCell>
