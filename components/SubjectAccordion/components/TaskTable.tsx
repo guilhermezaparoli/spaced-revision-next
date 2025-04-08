@@ -10,7 +10,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from "@/components/ui/table";
 
 import { useTaskQueryDelete } from "@/api/queries/task/taskQuery";
@@ -89,7 +89,9 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
       <Table className="table-auto">
         <TableHeader>
           <TableRow>
-            <TableHead className="whitespace-nowrap w-0 flex-1">Título</TableHead>
+            <TableHead className="w-0 flex-1 whitespace-nowrap">
+              Título
+            </TableHead>
             <TableHead className="min-w-[170px]">Descrição</TableHead>
 
             {tasks?.[0]?.review.map((task, index) => (
@@ -109,27 +111,54 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
                 index % 2 === 0 ? "bg-rowAccordionEven" : "bg-rowAccordionOdd"
               }
             >
-             <TableCell className="whitespace-nowrap w-0 flex-1 font-medium">{task.name}</TableCell>
+              <TableCell className="w-0 flex-1 whitespace-nowrap font-medium">
+                {task.name}
+              </TableCell>
               <TableCell className="w-36">{task.description}</TableCell>
-              {task.review.map((review) => (
-                <TableCell key={review.id}>
-                  <div className="flex items-center gap-2">
-                    <p className={`${review.completed && "line-through"} ${!review.completed && dayjs(review.review_date).isBefore(dayjs(), "day") && "text-red-500"} ${!review.completed && dayjs(review.review_date).isSame(dayjs().add(1, "day"), "day") && "text-blue-500"}  ${!review.completed && dayjs(review.review_date).isSame(dayjs()) && "text-green-500"}`}>
-                      {dayjs(review.review_date).format("DD/MM/YYYY")}
-                    </p>
-                    <Checkbox
-                      checked={review.completed}
-                      className="border-details"
-                      onClick={() => onClickCheckboxReview(review)}
-                    />
-                  </div>
-                </TableCell>
-              ))}
+              {task.review.map((review) => {
+                const isCompleted = review.completed;
+                const isLate =
+                  !isCompleted &&
+                  dayjs(review.review_date).isBefore(dayjs(), "day");
+                const isTomorrow =
+                  !isCompleted &&
+                  dayjs(review.review_date).isSame(
+                    dayjs().add(1, "day"),
+                    "day",
+                  );
+                const isToday =
+                  !isCompleted &&
+                  dayjs(review.review_date).isSame(dayjs(), "day");
+
+                let textClass = "";
+
+                if (isCompleted) textClass = "line-through";
+                else if (isLate) textClass = "text-red-500";
+                else if (isTomorrow) textClass = "text-blue-500";
+                else if (isToday) textClass = "text-green-500";
+
+                return (
+                  <TableCell key={review.id}>
+                    <div className="flex items-center gap-2">
+                      <p
+                        className={textClass}
+                      >
+                        {dayjs(review.review_date).format("DD/MM/YYYY")}
+                      </p>
+                      <Checkbox
+                        checked={review.completed}
+                        className="border-details"
+                        onClick={() => onClickCheckboxReview(review)}
+                      />
+                    </div>
+                  </TableCell>
+                );
+              })}
               <TableCell>
                 <div className="flex items-center justify-center">
                   <Checkbox
                     checked={task.completed}
-                    className="border-details cursor-not-allowed"
+                    className="cursor-not-allowed border-details"
                   />
                 </div>
               </TableCell>
@@ -141,7 +170,7 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
                   />
 
                   <Trash2
-                    className="size-4 text-red-600 cursor-pointer"
+                    className="size-4 cursor-pointer text-red-600"
                     onClick={() => onClickDeleteTask(task.id)}
                   />
                 </div>
@@ -150,7 +179,7 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
           ))}
         </TableBody>
       </Table>
-      <div className="mt-4 ml-2">
+      <div className="ml-2 mt-4">
         <Button
           className="h-6 cursor-pointer bg-green-700 p-2"
           onClick={(e) => {
