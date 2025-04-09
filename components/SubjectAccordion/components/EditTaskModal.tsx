@@ -17,6 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import zod from "zod";
 type CreateTaskModalProps = {
 
@@ -35,8 +36,9 @@ export function EditTaskModal({ data, trigger }: CreateTaskModalProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    getValues
+    formState: { errors, isDirty },
+    getValues,
+    reset
   } = useForm({
     resolver: zodResolver(zodSchema),
     defaultValues: {
@@ -54,7 +56,6 @@ export function EditTaskModal({ data, trigger }: CreateTaskModalProps) {
       },
       {
         onSuccess: (data) => {
-          console.log(data, "2312123");
           queryClient.setQueryData(["subjects"], (currentData: Subject[]) =>
             currentData.map((subject) => {
               if (subject.id === data.subject_id) {
@@ -76,12 +77,17 @@ export function EditTaskModal({ data, trigger }: CreateTaskModalProps) {
             }),
           );
           setOpen(false);
+          toast.success("Tarefa editada com sucesso")
+          reset({
+            name: data.name,
+            description: data.description,
+          })
         },
       },
     );
   }
 
-  console.log(getValues())
+  console.log(isDirty, "isDirty");
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{trigger}</DialogTrigger>
@@ -121,6 +127,7 @@ export function EditTaskModal({ data, trigger }: CreateTaskModalProps) {
             type="submit"
             className="w-full bg-cyan-500 hover:bg-cyan-600"
             onClick={handleSubmit(onHandleSubmit)}
+            disabled={!isDirty}
           >
             Confirmar
           </Button>

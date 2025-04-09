@@ -36,6 +36,7 @@ import { useRouter } from "next/navigation";
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import zod from "zod";
 export default function Home() {
   const { data, isFetching } = useSubjectQuery();
@@ -69,6 +70,7 @@ export default function Home() {
           ...currentData,
           data,
         ]);
+        toast.success("Matéria criada com sucesso")
       },
     });
 

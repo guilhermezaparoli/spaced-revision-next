@@ -18,17 +18,9 @@ import background from "../../public/background-space.png";
 import useSignin from "./useSignin";
 
 export default function Signin() {
-  const mutationLogin = useAuthMutationLogin();
-  const router = useRouter();
-  const { register, handleSubmit } = useSignin();
+ 
+  const { register, handleSubmit, onSubmit, mutationLogin } = useSignin();
 
-  async function onSubmit(data: LoginProps) {
-    mutationLogin.mutate(data, {
-      onSuccess: () => {
-        router.push("/");
-      },
-    });
-  }
 
   return (
     <div className="md:grid md:grid-cols-2">

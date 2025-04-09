@@ -22,6 +22,7 @@ import { Pen, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { CreateTaskModal } from "./CreateTaskModal";
 import { EditTaskModal } from "./EditTaskModal";
+import { toast } from "react-toastify";
 
 type TaskProps = {
   idSubject: string;
@@ -81,6 +82,8 @@ export function TaskTable({ idSubject, tasks }: TaskProps) {
             return subject;
           }),
         );
+
+        toast.success("Tarefa deletada com sucesso")
       },
     });
   }
