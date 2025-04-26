@@ -3,6 +3,7 @@ import { Review } from "@/@types/review";
 import { Subject } from "@/@types/subject";
 import { ReviewService } from "@/api/services/review/reviewService";
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { queryKeys } from "../queryKeys";
 
 export const useReviewUpdateMutation = () => {
     const queryClient = useQueryClient();
@@ -12,7 +13,7 @@ export const useReviewUpdateMutation = () => {
             completed
         }),
         onSuccess: (data) => {
-            queryClient.setQueryData(["subjects"], (currentData: Subject[]) =>
+            queryClient.setQueryData(queryKeys.SUBJECTS, (currentData: Subject[]) =>
                 currentData.map((subject) => {
                     if (subject.id === data.subject_id) {
                         return {

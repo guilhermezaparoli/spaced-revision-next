@@ -1,4 +1,3 @@
-const queryKeys = {
-    getAllUsers: () => ('users'),
-    getUserById: (id: string) => ['user', id],
+export const queryKeys = {
+    SUBJECTS: ["subjects"] as const,
 }
