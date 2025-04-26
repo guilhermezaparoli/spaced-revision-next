@@ -27,9 +27,7 @@ export function EditSubjectModal({
   setOpen,
   subject,
 }: CreateTaskModalProps) {
-  const mutationSubjectUpdate = useSubjectQueryMutationUpdate();
-  const queryClient = useQueryClient();
-
+  const { mutate: updateSubject } = useSubjectQueryMutationUpdate();
   const zodSchema = zod.object({
     name: zod.string().min(3, "Nome muito curto").max(50, "Nome muito longo"),
     intervalo: zod.array(zod.number()),
@@ -50,27 +48,12 @@ export function EditSubjectModal({
   });
 
   async function onHandleEditSubmit(data: FormData) {
-    mutationSubjectUpdate.mutate(
+    updateSubject(
       {
         id: subject.id,
         name: data.name,
         task: subject.task,
-      },
-      {
-        onSuccess: (data) => {
-          queryClient.setQueryData(["subjects"], (currentData: Subject[]) =>
-            currentData.map((subject) => {
-              if (subject.id === data.id) {
-                return {
-                  ...subject,
-                  name: data.name,
-                };
-              }
-              return subject;
-            }),
-          );
-        },
-      },
+      }
     );
 
     setOpen(false);

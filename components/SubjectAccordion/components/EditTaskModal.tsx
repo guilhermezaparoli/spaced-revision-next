@@ -25,7 +25,7 @@ type CreateTaskModalProps = {
   trigger: ReactNode;
 };
 export function EditTaskModal({ data, trigger }: CreateTaskModalProps) {
-  const mutation = userTaskQueryUpdate();
+  const { mutateAsync: updateTask } = userTaskQueryUpdate();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const zodSchema = zod.object({
@@ -42,52 +42,25 @@ export function EditTaskModal({ data, trigger }: CreateTaskModalProps) {
   } = useForm({
     resolver: zodResolver(zodSchema),
     defaultValues: {
-      name: data.name ,
+      name: data.name,
       description: data.description,
     },
   });
 
   async function onHandleSubmit(dataForm: any) {
     console.log(dataForm);
-    mutation.mutate(
-      {
-        id: data.id,
-        ...dataForm
-      },
-      {
-        onSuccess: (data) => {
-          queryClient.setQueryData(["subjects"], (currentData: Subject[]) =>
-            currentData.map((subject) => {
-              if (subject.id === data.subject_id) {
-                return {
-                  ...subject,
-                  task: subject.task.map((task) => { 
-                    if (task.id === data.id) {
-                      return {
-                        ...task,
-                        ...data,
-                      };
-                    }
-                    return task;
-                  }
-                  ),
-                };
-              }
-              return subject;
-            }),
-          );
-          setOpen(false);
-          toast.success("Tarefa editada com sucesso")
-          reset({
-            name: data.name,
-            description: data.description,
-          })
-        },
-      },
+    const response = await updateTask({ id: data.id, ...dataForm },
     );
+
+    if (response) {
+      setOpen(false);
+      reset({
+        name: data.name,
+        description: data.description,
+      })
+    }
   }
 
-  console.log(isDirty, "isDirty");
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{trigger}</DialogTrigger>

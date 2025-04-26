@@ -21,7 +21,7 @@ type CreateTaskModalProps = {
   id: string;
 };
 export function CreateTaskModal({ open, setOpen, id }: CreateTaskModalProps) {
-  const mutation = useTaskQueryCreate();
+  const { mutateAsync: createTaskMutate } = useTaskQueryCreate();
   const queryClient = useQueryClient();
   const zodSchema = zod.object({
     name: zod.string().min(3, "Nome muito curto").max(50, "Nome muito longo"),
@@ -39,32 +39,10 @@ export function CreateTaskModal({ open, setOpen, id }: CreateTaskModalProps) {
       description: "",
     },
   });
-console.log(id)
+  console.log(id)
   async function onHandleSubmit(data: any) {
     console.log(data);
-    mutation.mutate(
-      {
-        id,
-        ...data
-      },
-      {
-        onSuccess: (data) => {
-          console.log(data, "2312123");
-          queryClient.setQueryData(["subjects"], (currentData: Subject[]) =>
-            currentData.map((subject) => {
-              if (subject.id === data.subject_id) {
-                return {
-                  ...subject,
-                  task: [...subject.task, data],
-                };
-              }
-              return subject;
-            }),
-          );
-          setOpen(false);
-        },
-      },
-    );
+    createTaskMutate({ id, ...data });
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>

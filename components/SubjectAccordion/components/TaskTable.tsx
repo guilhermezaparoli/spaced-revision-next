@@ -2,7 +2,7 @@
 import { Review } from "@/@types/review";
 import { Subject } from "@/@types/subject";
 import { Task } from "@/@types/task";
-import { useReviewQueryMutation } from "@/api/queries/review/useReviewQueyMutation";
+import { useReviewUpdateMutation } from "@/api/queries/review/useReviewMutation";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
@@ -29,63 +29,17 @@ type TaskProps = {
   tasks: Task[];
 };
 export function TaskTable({ idSubject, tasks }: TaskProps) {
-  const mutationReview = useReviewQueryMutation();
-  const mutationTask = useTaskQueryDelete();
+  const { mutate: createReview } = useReviewUpdateMutation();
+  const { mutate: deleteTask } = useTaskQueryDelete(idSubject);
   const queryClient = useQueryClient();
   const [openDialogCreate, setOpenDialogCreate] = useState(false);
 
   async function onClickCheckboxReview(item: Review) {
-    mutationReview.mutate(
-      {
-        id: item.id,
-        completed: !item.completed,
-      },
-      {
-        onSuccess: (data) => {
-          queryClient.setQueryData(["subjects"], (currentData: Subject[]) =>
-            currentData.map((subject) => {
-              console.log(subject, "aquiii");
-              if (subject.id === data.subject_id) {
-                return {
-                  ...subject,
-                  task: subject.task.map((task) => {
-                    if (task.id === data.id) {
-                      return {
-                        ...task,
-                        completed: data.completed,
-                        review: data.review,
-                      };
-                    }
-                    return task;
-                  }),
-                };
-              }
-              return subject;
-            }),
-          );
-        },
-      },
-    );
+    createReview({ id: item.id, completed: !item.completed, });
   }
 
   async function onClickDeleteTask(id: string) {
-    mutationTask.mutate(id, {
-      onSuccess: () => {
-        queryClient.setQueryData(["subjects"], (currentData: Subject[]) =>
-          currentData.map((subject) => {
-            if (subject.id === idSubject) {
-              return {
-                ...subject,
-                task: subject.task.filter((task) => task.id !== id),
-              };
-            }
-            return subject;
-          }),
-        );
-
-        toast.success("Tarefa deletada com sucesso")
-      },
-    });
+    deleteTask(id);
   }
   return (
     <>
