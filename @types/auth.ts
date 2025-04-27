@@ -1,6 +1,6 @@
 // src/types/auth.ts
 
-export type LoginProps = {
+export type User = {
   email: string;
   password_hash: string;
 };

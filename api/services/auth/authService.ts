@@ -1,17 +1,16 @@
 import api from "@/api/api";
-import { IAuthService } from "./contracts/IAuthServiceContract";
-import { LoginProps, LoginUserResponse } from "./authServiceTypes";
-import { HttpMethod, IHttpClient } from "@/infra/http/httpClientContract";
+import { IHttpClient } from "@/infra/http/httpClientContract";
+import { User } from "./authServiceTypes";
 
 
 
-export class AuthService implements IAuthService {
+export class AuthService {
     constructor(private readonly httpClient: IHttpClient) { }
 
     async signout() {
         await api.post("/auth/logout");
     }
-    async register(body: LoginProps) {
+    async register(body: User) {
         await api.post("/auth/register", body);
     }
 

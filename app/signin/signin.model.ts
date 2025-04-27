@@ -1,4 +1,4 @@
-import { LoginProps } from "@/@types/auth";
+import { User } from "@/@types/auth";
 import { useAuthMutationLogin } from "@/api/queries/auth/authQuery";
 import { LoginUserResponse } from "@/api/services/auth/authServiceTypes";
 import { IService } from "@/api/services/auth/contracts/Iservice";
@@ -9,7 +9,7 @@ import { FormData, SchemaSignin } from "./signin.schema";
 
 
 type SigninModelProps = {
-  signinService: IService<LoginProps, LoginUserResponse>
+  signinService: IService<User, LoginUserResponse>
 }
 const useSigninModel = ({ signinService }: SigninModelProps) => {
   const { mutate, isPending } = useAuthMutationLogin(signinService);
