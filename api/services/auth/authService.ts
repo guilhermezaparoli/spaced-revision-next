@@ -1,54 +1,20 @@
-import axios from "axios";
-import api from "../../api";
-import { Register } from "@/@types/auth";
+import api from "@/api/api";
+import { IAuthService } from "./contracts/IAuthService";
+import { LoginProps, LoginUserResponse } from "./authService.types";
 
-type LoginProps = {
-  email: string;
-  password_hash: string;
-};
 
-export const AuthService = {
-  login: async ({ email, password_hash }: LoginProps) => {
-    try {
-      const response = await api.post("/auth/login", {
-        email,
-        password_hash,
-      });
 
-      return response;
-    } catch (error) {
-      console.log(error);
-      throw error
+export class AuthService implements IAuthService {
+    async signin(body: LoginProps) {
+        const { data } = await api.post<LoginUserResponse>("/auth/login", body);
+
+        return data;
     }
-  },
-  logout: async () => {
- 
-    try {
-      const response = await api.post("/auth/logout");
-      return response;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(
-          `Status: ${error.response.status}, Message: ${error.response.data.message}`,
-        );
-      }
+    async signout() {
+        await api.post("/auth/logout");
     }
-  },
-  register: async ({ email, password_hash, name }: Register) => {
-    try {
-      const response = await api.post("/auth/register", {
-        email,
-        password_hash,
-        name,
-      });
-      console.log(response);
-      return response;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(
-          `Status: ${error.response.status}, Message: ${error.response.data.message}`,
-        );
-      }
+    async register(body: LoginProps) {
+        await api.post("/auth/register", body);
     }
-  },
-};
+
+}

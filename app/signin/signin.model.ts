@@ -1,24 +1,26 @@
-import { LoginProps } from "@/@types/auth";
 import { useAuthMutationLogin } from "@/api/queries/auth/authQuery";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { FormData, SchemaSignin } from "./signin.schema";
+import { IAuthService } from "@/api/services/auth/contracts/IAuthService";
 
-const useSignin = () => {
-  const mutationLogin = useAuthMutationLogin();
 
-  const zodSchema = z.object({
-    email: z.string().email(),
-    password_hash: z.string().min(8),
-  });
+type SigninModelProps = {
+  signinService: Pick<IAuthService, "signin">
+}
+const useSigninModel = ({ signinService }: SigninModelProps) => {
+  const { mutate, isPending } = useAuthMutationLogin(signinService);
+
+
+
   const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({
-    resolver: zodResolver(zodSchema),
+    resolver: zodResolver(SchemaSignin),
     defaultValues: {
       email: "guilhermezapas2@gmail.com",
       password_hash: "OvoPascoa120@",
@@ -26,9 +28,8 @@ const useSignin = () => {
   });
 
 
-
-  async function onSubmit(data: LoginProps) {
-    mutationLogin.mutate(data, {
+  async function onSubmit(data: FormData) {
+    mutate(data, {
       onSuccess: () => {
         router.push("/home");
       },
@@ -40,8 +41,8 @@ const useSignin = () => {
     errors,
     isSubmitting,
     onSubmit,
-    mutationLogin
+    isPending
   };
 };
 
-export default useSignin;
+export default useSigninModel;
