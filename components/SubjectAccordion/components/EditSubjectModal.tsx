@@ -12,9 +12,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import zod, { infer } from "zod";
+import zod from "zod";
 
 type CreateTaskModalProps = {
   open: boolean;
@@ -37,8 +36,6 @@ export function EditSubjectModal({
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    getValues,
   } = useForm({
     resolver: zodResolver(zodSchema),
     defaultValues: {

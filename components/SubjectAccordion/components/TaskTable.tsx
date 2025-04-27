@@ -1,6 +1,5 @@
 "use client";
 import { Review } from "@/@types/review";
-import { Subject } from "@/@types/subject";
 import { Task } from "@/@types/task";
 import { useReviewUpdateMutation } from "@/api/queries/review/useReviewMutation";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -16,13 +15,11 @@ import {
 import { useTaskQueryDelete } from "@/api/queries/task/taskQuery";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { Pen, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { CreateTaskModal } from "./CreateTaskModal";
 import { EditTaskModal } from "./EditTaskModal";
-import { toast } from "react-toastify";
 
 type TaskProps = {
   idSubject: string;
@@ -31,7 +28,6 @@ type TaskProps = {
 export function TaskTable({ idSubject, tasks }: TaskProps) {
   const { mutate: createReview } = useReviewUpdateMutation();
   const { mutate: deleteTask } = useTaskQueryDelete(idSubject);
-  const queryClient = useQueryClient();
   const [openDialogCreate, setOpenDialogCreate] = useState(false);
 
   async function onClickCheckboxReview(item: Review) {

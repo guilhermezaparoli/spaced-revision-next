@@ -1,7 +1,6 @@
 "use client";
-import { Subject } from "@/@types/subject";
 import { Task } from "@/@types/task";
-import { userTaskQueryUpdate, useTaskQueryCreate } from "@/api/queries/task/taskQuery";
+import { userTaskQueryUpdate } from "@/api/queries/task/taskQuery";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,11 +13,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
 import { ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import zod from "zod";
+import { z } from "zod";
 type CreateTaskModalProps = {
 
   data: Task;
@@ -26,18 +23,18 @@ type CreateTaskModalProps = {
 };
 export function EditTaskModal({ data, trigger }: CreateTaskModalProps) {
   const { mutateAsync: updateTask } = userTaskQueryUpdate();
-  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const zodSchema = zod.object({
-    name: zod.string().min(3, "Nome muito curto").max(50, "Nome muito longo"),
-    description: zod.string().max(100, "Descrição muito longa"),
+  const zodSchema = z.object({
+    name: z.string().min(3, "Nome muito curto").max(50, "Nome muito longo"),
+    description: z.string().max(100, "Descrição muito longa"),
   });
+
+  type FormData = z.infer<typeof zodSchema>;
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
-    getValues,
+    formState: { isDirty },
     reset
   } = useForm({
     resolver: zodResolver(zodSchema),
@@ -47,7 +44,7 @@ export function EditTaskModal({ data, trigger }: CreateTaskModalProps) {
     },
   });
 
-  async function onHandleSubmit(dataForm: any) {
+  async function onHandleSubmit(dataForm: FormData) {
     console.log(dataForm);
     const response = await updateTask({ id: data.id, ...dataForm },
     );

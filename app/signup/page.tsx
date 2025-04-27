@@ -1,6 +1,4 @@
 "use client";
-import { Register } from "@/@types/auth";
-import { useAuthQueryMutationRegister } from "@/api/queries/auth/authQuery";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,7 +11,6 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import background from "../../public/background-space.png";
 import { useSignup } from "./useSignup";
 
@@ -23,8 +20,6 @@ export default function Signup() {
     handleSubmit,
     onSubmit,
     mutationRegister,
-    errors,
-    isSubmitting,
   } = useSignup();
 
   return (

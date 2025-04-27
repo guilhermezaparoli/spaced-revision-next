@@ -3,7 +3,6 @@ import { useAuthMutationLogin } from "@/api/queries/auth/authQuery";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import { z } from "zod";
 
 const useSignin = () => {
@@ -13,7 +12,7 @@ const useSignin = () => {
     email: z.string().email(),
     password_hash: z.string().min(8),
   });
-const router = useRouter();
+  const router = useRouter();
   const {
     register,
     handleSubmit,

@@ -1,6 +1,4 @@
 "use client";
-import { LoginProps } from "@/@types/auth";
-import { useAuthMutationLogin } from "@/api/queries/auth/authQuery";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,12 +11,11 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import background from "../../public/background-space.png";
 import useSignin from "./useSignin";
 
 export default function Signin() {
- 
+
   const { register, handleSubmit, onSubmit, mutationLogin } = useSignin();
 
 
