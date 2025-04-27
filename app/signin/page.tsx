@@ -1,11 +1,12 @@
 "use client";
-import { AuthService } from "@/api/services/auth/authService";
 import useSigninModel from "./signin.model";
 import { SigninView } from "./signin.view";
+import { HttpClient } from "@/infra/http/httpClient";
+import { SigninUserService } from "@/api/services/auth/use-cases/signin-user-service";
 
 export default function Signin() {
-
-  const signinService = new AuthService()
+  const httpClient = HttpClient.create()
+  const signinService = new SigninUserService(httpClient)
   const methods = useSigninModel({ signinService });
 
 

@@ -1,13 +1,15 @@
+import { LoginProps } from "@/@types/auth";
 import { useAuthMutationLogin } from "@/api/queries/auth/authQuery";
+import { LoginUserResponse } from "@/api/services/auth/authServiceTypes";
+import { IService } from "@/api/services/auth/contracts/Iservice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { FormData, SchemaSignin } from "./signin.schema";
-import { IAuthService } from "@/api/services/auth/contracts/IAuthService";
 
 
 type SigninModelProps = {
-  signinService: Pick<IAuthService, "signin">
+  signinService: IService<LoginProps, LoginUserResponse>
 }
 const useSigninModel = ({ signinService }: SigninModelProps) => {
   const { mutate, isPending } = useAuthMutationLogin(signinService);

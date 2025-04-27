@@ -1,12 +1,14 @@
+import { LoginProps } from "@/@types/auth"
 import { AuthService } from "@/api/services/auth/authService"
-import { IAuthService } from "@/api/services/auth/contracts/IAuthService"
+import { LoginUserResponse } from "@/api/services/auth/authServiceTypes"
+import { IService } from "@/api/services/auth/contracts/Iservice"
 import { useMutation } from "@tanstack/react-query"
 const authService = new AuthService()
 
-export const useAuthMutationLogin = (signinService: Pick<IAuthService, "signin">) => {
+export const useAuthMutationLogin = (signinService: IService<LoginProps, LoginUserResponse>) => {
 
     return useMutation({
-        mutationFn: signinService.signin,
+        mutationFn: signinService.exec,
     })
 }
 
